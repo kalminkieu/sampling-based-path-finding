@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <launch>
+  <include file="$(find path_finder)/launch/map.launch"/>
   <arg name="global_env_pcd2_topic" value="/random_forest/all_map" />
   <arg name="map_size_x" value="50.0" />
   <arg name="map_size_y" value="50.0" />
@@ -11,14 +12,14 @@
 
   <arg name="steer_length" value="2.0" />
   <arg name="search_radius" value="6.0" />
-  <arg name="search_time" value="0.1" />
-  <arg name="max_tree_node_nums" value="1000" />
+  <arg name="search_time" value="1" />
+  <arg name="max_tree_node_nums" value="100000" />
   <arg name="use_informed_sampling" value="true" />
   <arg name="use_GUILD_sampling" value="false" />
-  <arg name="run_rrt" value="true" />
-  <arg name="run_rrt_star" value="true" />
-  <arg name="run_rrt_sharp" value="true" />
-  <arg name="run_brrt" value="true" />
+  <arg name="run_rrt" value="false" />
+  <arg name="run_rrt_star" value="false" />
+  <arg name="run_rrt_sharp" value="false" />
+  <arg name="run_brrt" value="false" />
   <arg name="run_brrt_star" value="true" />
 
 

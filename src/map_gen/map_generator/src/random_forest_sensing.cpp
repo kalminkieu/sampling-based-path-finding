@@ -57,6 +57,57 @@ pcl::PointCloud<pcl::PointXYZ> cloudMap;
 pcl::search::KdTree<pcl::PointXYZ> kdtreeMap;
 vector<int> pointIdxSearch;
 vector<float> pointSquaredDistance;
+void RandomNarrowGenerate()
+{
+   random_device rd;
+   default_random_engine eng(rd());
+   float t_y_l;
+   float t_y_h;
+   
+
+   pcl::PointXYZ pt_random;
+   int escape = 4;
+   int step = 0;
+   for (int i = int(_x_l); i < int(_x_h); i+=escape)
+   {
+      if (step % 2 == 0)
+      {
+         t_y_l = _y_l;
+         t_y_h = _y_h - escape;
+      }
+      else
+      {
+         t_y_l = _y_l+ escape;
+         t_y_h = _y_h;
+      }
+      step ++;
+      for (float j = t_y_l; j < t_y_h; j+=0.5)
+      {
+         for (float k = -1; k < _h_h; k+=0.5)
+         {
+            pt_random.x = i;
+            pt_random.y = j;
+            pt_random.z = k;
+            cloudMap.points.push_back(pt_random);
+         }
+         // pt_random.x = i;
+         // pt_random.y = j;
+         // pt_random.z = -0.5;
+         // cloudMap.points.push_back(pt_random);
+      }
+   }
+   
+
+   cloudMap.width = cloudMap.points.size();
+   cloudMap.height = 1;
+   cloudMap.is_dense = true;
+
+   _has_map = true;
+
+   pcl::toROSMsg(cloudMap, globalMap_pcd);
+   globalMap_pcd.header.frame_id = "map";
+}
+
 
 void RandomMapGenerate()
 {
@@ -325,7 +376,8 @@ int main(int argc, char **argv)
    _y_l = -_y_size / 2.0;
    _y_h = +_y_size / 2.0;
 
-   RandomMapGenerate();
+   // RandomMapGenerate();
+   RandomNarrowGenerate();
    //only pub map pointcloud on request
    ros::ServiceServer pub_glb_obs_service = n.advertiseService("/pub_glb_obs", pubGlbObs);
    ros::spin();
