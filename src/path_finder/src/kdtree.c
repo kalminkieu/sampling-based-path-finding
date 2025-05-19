@@ -72,20 +72,20 @@ struct res_node
     struct res_node *next;
 };
 
-struct kdtree
-{
-    int dim;
-    struct kdnode *root;
-    struct kdhyperrect *rect;
-    void (*destr)(void *);
-};
+// struct kdtree
+// {
+//     int dim;
+//     struct kdnode *root;
+//     struct kdhyperrect *rect;
+//     void (*destr)(void *);
+// };
 
-struct kdres
-{
-    struct kdtree *tree;
-    struct res_node *rlist, *riter;
-    int size;
-};
+// struct kdres
+// {
+//     struct kdtree *tree;
+//     struct res_node *rlist, *riter;
+//     int size;
+// };
 
 #define SQ(x) ((x) * (x))
 

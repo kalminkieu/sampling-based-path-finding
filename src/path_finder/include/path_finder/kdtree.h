@@ -27,9 +27,21 @@ OF SUCH DAMAGE.
 #ifdef __cplusplus
 extern "C" {
 #endif
+struct kdtree
+{
+    int dim;
+    struct kdnode *root;
+    struct kdhyperrect *rect;
+    void (*destr)(void *);
+};
 
-struct kdtree;
-struct kdres;
+struct kdres
+{
+    struct kdtree *tree;
+    struct res_node *rlist, *riter;
+    int size;
+};
+
 
 
 /* create a kd-tree for "k"-dimensional data */

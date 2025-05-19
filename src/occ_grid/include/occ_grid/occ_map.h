@@ -48,6 +48,7 @@ namespace env
     double getResolution() { return resolution_; }
     Eigen::Vector3d getOrigin() { return origin_; }
     Eigen::Vector3d getMapSize() { return map_size_; };
+    Eigen::Vector3d getFreeNodeInLine(Eigen::Vector3d  start, Eigen::Vector3d end,float step);
     bool isStateValid(const Eigen::Vector3d &pos) const
     {
       Eigen::Vector3i idx = posToIndex(pos);
@@ -132,6 +133,17 @@ namespace env
     Eigen::Vector3i idx;
     posToIndex(pos, idx);
     return isInMap(idx);
+  }
+  inline Eigen::Vector3d OccMap::getFreeNodeInLine(Eigen::Vector3d  start, Eigen::Vector3d end,float step){
+    Eigen::Vector3d current = end  - start;
+    Eigen::Vector3d stepVector = current / (current.norm()/step);
+    
+    for (int i=1; i <= current.norm()/step ;i++){
+        if (!OccMap::isStateValid(start + i*stepVector))
+        return start + (i-1)*stepVector;
+
+    }    
+    return end; // Return the end point if the entire line is valid
   }
 
   inline bool OccMap::isInMap(const Eigen::Vector3i &id) const

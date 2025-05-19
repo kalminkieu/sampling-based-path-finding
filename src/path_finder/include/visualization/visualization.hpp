@@ -363,7 +363,7 @@ namespace visualization
                 marker.points[2 * i + 1].x = pairline[i].second[0];
                 marker.points[2 * i + 1].y = pairline[i].second[1];
                 marker.points[2 * i + 1].z = pairline[i].second[2];
-                usleep(900);
+                // usleep(900);
                 publisher_map_[topic].publish(marker);
             }
             
