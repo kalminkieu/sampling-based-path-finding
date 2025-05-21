@@ -5,20 +5,22 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /Status1
         - /Grid1/Offset1
         - /Mapping1/input_obs1/Autocompute Value Bounds1
         - /Mapping1/global_occ1/Autocompute Value Bounds1
         - /Planning1
         - /Planning1/start1
         - /Planning1/goal1
-        - /MarkerArray1
-        - /Marker1
-        - /Marker1/Namespaces1
+        - /BRRT_Optimize_Node1
+        - /BRRT_Optimize_Edges1
+        - /BRRT_Optimize_Edges1/Namespaces1
         - /SampleNode1
-        - /PointCloud21
-        - /Q_new1
+        - /q_nearest1
+        - /rearest1
+        - /BRRT_Optimize_Path1
       Splitter Ratio: 0.6735293865203857
-    Tree Height: 655
+    Tree Height: 628
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -144,7 +146,7 @@ Visualization Manager:
           Marker Topic: /path_finder_node/start
           Name: start
           Namespaces:
-            "": true
+            {}
           Queue Size: 100
           Value: true
         - Class: rviz/Marker
@@ -152,7 +154,7 @@ Visualization Manager:
           Marker Topic: /path_finder_node/goal
           Name: goal
           Namespaces:
-            "": true
+            {}
           Queue Size: 100
           Value: true
         - Class: rviz/MarkerArray
@@ -460,17 +462,17 @@ Visualization Manager:
     - Class: rviz/MarkerArray
       Enabled: true
       Marker Topic: /path_finder_node/tree_vertice
-      Name: MarkerArray
+      Name: BRRT_Optimize_Node
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /path_finder_node/tree_edges
-      Name: Marker
+      Name: BRRT_Optimize_Edges
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
@@ -478,36 +480,8 @@ Visualization Manager:
       Marker Topic: /path_finder_node/sample_node
       Name: SampleNode
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
-      Value: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: Intensity
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Min Color: 0; 0; 0
-      Name: PointCloud2
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.009999999776482582
-      Style: Flat Squares
-      Topic: /path_finder_node/brrt_optimize_final_wpts
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
       Value: true
     - Class: rviz/Marker
       Enabled: true
@@ -520,15 +494,15 @@ Visualization Manager:
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /path_finder_node/q_nearest
-      Name: Marker
+      Name: q_nearest
       Namespaces:
-        "": true
+        {}
       Queue Size: 100
       Value: true
     - Class: rviz/Marker
       Enabled: true
       Marker Topic: /path_finder_node/rearest
-      Name: Marker
+      Name: rearest
       Namespaces:
         {}
       Queue Size: 100
@@ -536,14 +510,14 @@ Visualization Manager:
     - Alpha: 1
       Buffer Length: 1
       Class: rviz/Path
-      Color: 25; 255; 0
+      Color: 78; 154; 6
       Enabled: true
       Head Diameter: 0.30000001192092896
       Head Length: 0.20000000298023224
       Length: 0.30000001192092896
-      Line Style: Lines
-      Line Width: 0.029999999329447746
-      Name: Path
+      Line Style: Billboards
+      Line Width: 1
+      Name: BRRT_Optimize_Path
       Offset:
         X: 0
         Y: 0
@@ -573,7 +547,7 @@ Visualization Manager:
       Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
-      Name: PointCloud2
+      Name: BRRT_Optimize_Points
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
@@ -584,6 +558,22 @@ Visualization Manager:
       Unreliable: false
       Use Fixed Frame: true
       Use rainbow: true
+      Value: true
+    - Class: rviz/Marker
+      Enabled: true
+      Marker Topic: /path_finder_node/brrt/tree_edges
+      Name: Marker
+      Namespaces:
+        {}
+      Queue Size: 100
+      Value: true
+    - Class: rviz/MarkerArray
+      Enabled: true
+      Marker Topic: /path_finder_node/brrt/tree_vertice
+      Name: MarkerArray
+      Namespaces:
+        {}
+      Queue Size: 100
       Value: true
   Enabled: true
   Global Options:
@@ -614,7 +604,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/XYOrbit
-      Distance: 48.37041473388672
+      Distance: 65.51542663574219
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -630,17 +620,17 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 1.5397963523864746
+      Pitch: 1.484796166419983
       Target Frame: map
-      Yaw: 6.277124881744385
+      Yaw: 0.003939628601074219
     Saved: ~
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 908
+  Height: 881
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001c9000002ccfc0200000012fb0000001200530065006c0065006300740069006f006e00000000280000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000002cc000000c900fffffffb0000000a006400650070007400680000000278000001460000000000000000fb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000001d1000000b50000000000000000fb0000000a0049006d006100670065000000032a000000940000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000312000000ac0000005c00fffffffb0000000a0049006d00610067006501000002500000016e0000000000000000fb0000000a0049006d00610067006501000002d9000000c90000000000000000000000010000010f000002ccfc0200000002fb0000000a00560069006500770073000000003d000002cc000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005e800000060fc0100000002fb0000000800540069006d00650100000000000005e8000003bc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000419000002cc00000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  QMainWindow State: 000000ff00000000fd000000040000000000000156000002b1fc0200000012fb0000001200530065006c0065006300740069006f006e00000000280000009b0000005c00fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000b0fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afb000000100044006900730070006c006100790073010000003d000002b1000000c900fffffffb0000000a006400650070007400680000000278000001460000000000000000fb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000c00430061006d00650072006100000001d1000000b50000000000000000fb0000000a0049006d006100670065000000032a000000940000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000000a0049006d00610067006501000002f4000000ca0000000000000000fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730000000312000000ac0000005c00fffffffb0000000a0049006d00610067006501000002500000016e0000000000000000fb0000000a0049006d00610067006501000002d9000000c90000000000000000000000010000010f000002ccfc0200000002fb0000000a00560069006500770073000000003d000002cc000000a400fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000005a000000060fc0100000002fb0000000800540069006d00650100000000000005a0000003bc00fffffffb0000000800540069006d0065010000000000000450000000000000000000000444000002b100000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -649,6 +639,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1512
-  X: 0
-  Y: 458
+  Width: 1440
+  X: 72
+  Y: 125

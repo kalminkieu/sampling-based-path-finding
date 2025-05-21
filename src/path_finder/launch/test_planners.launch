@@ -19,9 +19,20 @@
   <arg name="run_rrt" value="false" />
   <arg name="run_rrt_star" value="false" />
   <arg name="run_rrt_sharp" value="false" />
-  <arg name="run_brrt" value="false" />
+  <arg name="run_brrt" value="true" />
   <arg name="run_brrt_star" value="false" />
   <arg name="run_brrt_optimize" value="true" />
+
+  <arg name="brrt_optimize_p3" value="0.5" />
+  <arg name="brrt_optimize_p2" value="0.4" />
+  <arg name="brrt_optimize_p1" value="0.1" />
+  <arg name="brrt_step" value="0.5" />
+
+  <arg name="brrt_alpha" value="0.5" />
+  <arg name="brrt_beta" value="0.3" />
+  <arg name="brrt_gamma" value="0.2" />
+
+
 
   <node pkg="path_finder" type="path_finder" name="path_finder_node" output="screen">
     <remap from="/global_cloud" to="$(arg global_env_pcd2_topic)"/>
@@ -63,6 +74,8 @@
     <param name="BRRT/steer_length" value="$(arg steer_length)" type="double"/>
     <param name="BRRT/search_time" value="$(arg search_time)" type="double"/>
     <param name="BRRT/max_tree_node_nums" value="$(arg max_tree_node_nums)" type="int"/>
+    <param name="BRRT/step" value="$(arg brrt_step)" type="double"/>
+    
 
     <param name="BRRT_Star/steer_length" value="$(arg steer_length)" type="double"/>
     <param name="BRRT_Star/search_radius" value="$(arg search_radius)" type="double"/>
@@ -70,6 +83,15 @@
     <param name="BRRT_Star/max_tree_node_nums" value="$(arg max_tree_node_nums)" type="int"/>
     <param name="BRRT_Star/use_informed_sampling" value="$(arg use_informed_sampling)" type="bool"/>
 
+
+    <param name="BRRT_Optimize/p1" value="$(arg brrt_optimize_p1)" type="double"/>
+    <param name="BRRT_Optimize/p2" value="$(arg brrt_optimize_p2)" type="double"/>
+    <param name="BRRT_Optimize/p3" value="$(arg brrt_optimize_p3)" type="double"/>
+    <param name="BRRT_Optimize/step" value="$(arg brrt_step)" type="double"/>
+
+    <param name="BRRT_Optimize/alpha" value="$(arg brrt_alpha)" type="double"/>
+    <param name="BRRT_Optimize/beta" value="$(arg brrt_beta)" type="double"/>
+    <param name="BRRT_Optimize/gamma" value="$(arg brrt_gamma)" type="double"/>
   </node>
 
 </launch>
