@@ -178,6 +178,8 @@ namespace visualization
             marker.pose.orientation.y = 0;
             marker.pose.orientation.z = 0;
         }
+        
+        
         template <class ROTATION>
         void setMarkerPose(visualization_msgs::Marker &marker,
                            const double &x,
@@ -520,6 +522,40 @@ namespace visualization
                 ros::Publisher pub = nh_.advertise<TOPIC_TYPE>(topic, 10);
                 publisher_map_[topic] = pub;
             }
+        }
+        template <class CENTER, class TOPIC, class TEXT>
+        void visualize_a_text(const CENTER &c,
+            const TOPIC &topic,
+            const TEXT &text,
+            const Color color = blue,
+            const double a = 1){
+            visualization_msgs::Marker text_marker;
+            text_marker.header.frame_id = "map";  // or "base_link", etc.
+            text_marker.header.stamp = ros::Time::now();
+            text_marker.ns = "text";
+            text_marker.id = 0;
+
+            text_marker.type = visualization_msgs::Marker::TEXT_VIEW_FACING;
+            text_marker.action = visualization_msgs::Marker::ADD;
+
+            text_marker.pose.position.x =c[0];
+            text_marker.pose.position.y = c[1];
+            text_marker.pose.position.z = c[2];
+            text_marker.pose.orientation.x = 0.0;
+            text_marker.pose.orientation.y = 0.0;
+            text_marker.pose.orientation.z = 0.0;
+            text_marker.pose.orientation.w = 1.0;
+            setMarkerColor(text_marker, color, a);
+            // text_marker.scale.z = 0.5;  // Font size
+            // text_marker.color.a = 1.0;  // Alpha
+            // text_marker.color.r = 1.0;
+            // text_marker.color.g = 1.0;
+            // text_marker.color.b = 0.0;
+
+            text_marker.text = text;
+
+            publisher_map_[topic].publish(text_marker);
+
         }
     };
 

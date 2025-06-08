@@ -53,6 +53,8 @@ namespace path_plan
       nh_.param("BRRT_Optimize/beta", brrt_optimize_beta_, 0.3);
       nh_.param("BRRT_Optimize/gamma", brrt_optimize_gamma_, 0.5);
 
+      nh_.param("BRRT_Optimize/max_iteration", max_iteration_, 0);
+
       std::cout << "[BRRT_Optimize] param: p1: " << brrt_optimize_p1_ << "p2: " << brrt_optimize_p2_ << "p3: " << brrt_optimize_p3_ <<" step: " << brrt_optimize_step_<< std::endl;
       std::cout << "[BRRT_Optimize] param: alpha: " << brrt_optimize_alpha_ << " beta: " << brrt_optimize_beta_ << " gamma: " << brrt_optimize_gamma_ << std::endl;
       ROS_WARN_STREAM("[BRRT_Optimize] param: steer_length: " << steer_length_);
@@ -131,7 +133,7 @@ namespace path_plan
     double brrt_optimize_alpha_;
     double brrt_optimize_beta_;
     double brrt_optimize_gamma_;
-
+    int max_iteration_;
     double steer_length_;
     double search_time_;
     int max_tree_node_nums_;
@@ -289,17 +291,18 @@ namespace path_plan
       struct kdres *nodesB, *nodesA;
       /* main loop */
       int idx = 0;
-      for (idx = 0; idx < 1000000; ++idx)
+      for (idx = 0; idx < max_iteration_; ++idx)
       {
         /* random sampling */
         // std::cout << "=====================================idx: " << idx << std::endl;
-        // usleep(100000);
+        usleep(100000);
         double  random01 = dis(gen);
         double min_houristic = DBL_MAX;
         RRTNode3DPtr nodeSi, nodeGi ,selected_SI, selected_GI; 
         Eigen::Vector3d x_rand;
         nodesA = kd_nearest_range3(treeA, 0, 0, 0, DBL_MAX);
-      
+
+
         selected_GI = goal_node_;
         selected_SI = start_node_;
         for (int i = 0; i < kd_res_size(nodesA); ++i)
@@ -332,7 +335,8 @@ namespace path_plan
         {
           x_rand = selected_GI->x;
         }
-        else if (random01 > brrt_optimize_p1_ && random01 < brrt_optimize_p1_ + brrt_optimize_p2_)
+        // else if (random01 > brrt_optimize_p1_ && random01 < brrt_optimize_p1_ + brrt_optimize_p2_)
+        else if (false)
         {
           Eigen::Vector3d center = (selected_SI->x + selected_GI->x) / 2.0;
           double radius = (selected_SI->x - selected_GI->x).norm() / 2.0;
@@ -349,11 +353,11 @@ namespace path_plan
         }
         else
         {
-          sampler_.samplingOnce(x_rand);
+          sampler_.samplingOnce(x_rand,true);
           // samplingOnce(x_rand);
           while (!map_ptr_->isStateValid(x_rand))
           {
-            sampler_.samplingOnce(x_rand);
+            sampler_.samplingOnce(x_rand,true);
           }
           // usleep(1000000);
 
@@ -363,7 +367,7 @@ namespace path_plan
         struct kdres *p_nearestA = kd_nearest3(treeA, x_rand[0], x_rand[1], x_rand[2]);
         RRTNode3DPtr nearest_nodeA = (RRTNode3DPtr)kd_res_item_data(p_nearestA);
         Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, brrt_optimize_step_);
-        if (false)
+        if (vis_ptr_)
         {
           vis_ptr_->visualize_a_ball(x_rand, 0.5, "sample_node", visualization::Color::black);
           vis_ptr_->visualize_a_ball(x_new, 0.5, "q_nearest", visualization::Color::yellow);
@@ -449,17 +453,21 @@ namespace path_plan
         path_reverse = !path_reverse;
         visualizeWholeTree();
       } // End of sampling iteration
-
+      visualizeWholeTree();
       if (tree_connected)
       {
         final_path_use_time_ = (ros::Time::now() - rrt_start_time).toSec();
         ROS_INFO_STREAM("[BRRT_Optimize]: find_path_use_time: " << solution_cost_time_pair_list_.front().second << ", length: " << solution_cost_time_pair_list_.front().first);
-        visualizeWholeTree();
+        
+        // vis_ptr_->visualize_a_text(Eigen::Vector3d(0, 0, 0), "find_path_use_time","find_path_use_time: " + std::to_string(solution_cost_time_pair_list_.front().second), visualization::Color::black);
+        // vis_ptr_->visualize_a_text(Eigen::Vector3d(0, 0, 0.5), "length","length: " + std::to_string(solution_cost_time_pair_list_.front().first), visualization::Color::black);
+
+        // visualizeWholeTree();
         final_path_ = path_list_.back();
       }
       else if (valid_tree_node_nums_ == max_tree_node_nums_)
       {
-        visualizeWholeTree();
+        // visualizeWholeTree();
         ROS_ERROR_STREAM("[BRRT_Optimize]: NOT CONNECTED TO GOAL after " << max_tree_node_nums_ << " nodes added to rrt-tree");
       }
       else

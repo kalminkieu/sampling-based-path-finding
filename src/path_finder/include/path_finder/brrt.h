@@ -43,6 +43,7 @@ namespace path_plan
       nh_.param("BRRT/steer_length", steer_length_, 0.0);
       nh_.param("BRRT/search_time", search_time_, 0.0);
       nh_.param("BRRT/max_tree_node_nums", max_tree_node_nums_, 0);
+      nh_.param("BRRT/max_iteration", max_iteration_, 0);
       ROS_WARN_STREAM("[BRRT] param: steer_length: " << steer_length_);
       ROS_WARN_STREAM("[BRRT] param: search_time: " << search_time_);
       ROS_WARN_STREAM("[BRRT] param: max_tree_node_nums: " << max_tree_node_nums_);
@@ -115,6 +116,7 @@ namespace path_plan
 
     double steer_length_;
     double search_time_;
+    int max_iteration_;
     int max_tree_node_nums_;
     int valid_tree_node_nums_;
     double first_path_use_time_;
@@ -265,16 +267,15 @@ namespace path_plan
 
       /* main loop */
       int idx = 0;
-      for (idx = 0; (ros::Time::now() - rrt_start_time).toSec() < search_time_ && valid_tree_node_nums_ < max_tree_node_nums_; ++idx)
+      for (idx = 0; idx < max_iteration_; ++idx)
       {
         /* random sampling */
         Eigen::Vector3d x_rand;
-        sampler_.samplingOnce(x_rand);
-        
+        sampler_.samplingOnce(x_rand,true);
         // samplingOnce(x_rand);
-        if (!map_ptr_->isStateValid(x_rand))
+        while (!map_ptr_->isStateValid(x_rand))
         {
-          continue;
+          sampler_.samplingOnce(x_rand,true);
         }
 
         /* request nearest node in treeA */
@@ -288,7 +289,8 @@ namespace path_plan
         kd_res_free(p_nearestA);
 
         /* Extend treeA */
-        Eigen::Vector3d x_new = steer(nearest_nodeA->x, x_rand, steer_length_);
+        // Eigen::Vector3d x_new = steer(nearest_nodeA->x, x_rand, steer_length_);
+        Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, steer_length_);
         if ( (!map_ptr_->isStateValid(x_new)) || (!map_ptr_->isSegmentValid(nearest_nodeA->x, x_new)) ) 
         {
           /* Steer Trapped */
@@ -345,25 +347,27 @@ namespace path_plan
             solution_cost_time_pair_list_.emplace_back(path_cost, (ros::Time::now() - rrt_start_time).toSec());
             cost_best_ = path_cost;
           }
+          std::cout << "[BRRT]**********find path after " << idx << " iterations" << std::endl;
+          break;
         }
-        
+        // visualizeWholeTree();
         /* Swap treeA&B */
         std::swap(treeA, treeB);
         path_reverse = !path_reverse;
       }//End of sampling iteration
       
-
+      visualizeWholeTree();
       if (tree_connected)
       {
         final_path_use_time_ = (ros::Time::now() - rrt_start_time).toSec();
         ROS_INFO_STREAM("[BRRT]: find_path_use_time: " << solution_cost_time_pair_list_.front().second << ", length: " << solution_cost_time_pair_list_.front().first);
-        visualizeWholeTree();
+        // visualizeWholeTree();
         final_path_ = path_list_.back();
         
       }
       else if (valid_tree_node_nums_ == max_tree_node_nums_)
       {
-        visualizeWholeTree();
+        // visualizeWholeTree();
         ROS_ERROR_STREAM("[BRRT]: NOT CONNECTED TO GOAL after " << max_tree_node_nums_ << " nodes added to rrt-tree");
       }
       else
@@ -389,8 +393,8 @@ namespace path_plan
           node_p.center = vertice[i];
           tree_nodes.push_back(node_p);
         }
-        vis_ptr_->visualize_balls(tree_nodes, "tree_vertice", visualization::Color::blue, 1.0);
-        vis_ptr_->visualize_pairline(edges, "tree_edges", visualization::Color::red, 0.06);
+        vis_ptr_->visualize_balls(tree_nodes, "brrt/tree_vertice", visualization::Color::red, 1.0);
+        vis_ptr_->visualize_pairline(edges, "brrt/tree_edges", visualization::Color::blue, 0.06);
     }
 
     void sampleWholeTree(const RRTNode3DPtr &root, vector<Eigen::Vector3d> &vertice, vector<std::pair<Eigen::Vector3d, Eigen::Vector3d>> &edges)

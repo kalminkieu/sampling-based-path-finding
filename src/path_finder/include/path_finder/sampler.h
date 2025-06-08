@@ -46,7 +46,7 @@ public:
     range_ = range;
   }
 
-  void samplingOnce(Eigen::Vector3d &sample)
+  void samplingOnce(Eigen::Vector3d &sample,bool outz = false)
   {
     if (informed_)
     {
@@ -58,18 +58,34 @@ public:
     }
     else
     {
-      uniformSamplingOnce(sample);
+      uniformSamplingOnce(sample,outz);
     }
   }
 
-  void uniformSamplingOnce(Eigen::Vector3d &sample)
+  void uniformSamplingOnce(Eigen::Vector3d &sample,bool outz = false)
   {
-    sample[0] = uniform_rand_(gen_);
-    sample[1] = uniform_rand_(gen_);
-    sample[2] = uniform_rand_(gen_);
+    if (outz)
+    {
+      sample[0] = uniform_rand_(gen_);
+      sample[1] = uniform_rand_(gen_);
+      sample[2] = 0.5;
+    }
+    else
+    {
+      sample[0] = uniform_rand_(gen_);
+      sample[1] = uniform_rand_(gen_);
+      sample[2] = uniform_rand_(gen_);
+    }
     sample.array() *= range_.array();
     sample += origin_;
   };
+  // {
+  //   sample[0] = uniform_rand_(gen_);
+  //   sample[1] = uniform_rand_(gen_);
+  //   sample[2] = uniform_rand_(gen_);
+  //   sample.array() *= range_.array();
+  //   sample += origin_;
+  // };
 
   void informedSamplingOnce(Eigen::Vector3d &sample)
   {
