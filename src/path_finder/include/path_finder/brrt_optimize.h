@@ -31,6 +31,8 @@ OF SUCH DAMAGE.
 #include <utility>
 #include <queue>
 #include <algorithm>
+
+#include<random>
 namespace path_plan
 {
   class BRRT_Optimize
@@ -152,6 +154,11 @@ namespace path_plan
     // environment
     env::OccMap::Ptr map_ptr_;
     std::shared_ptr<visualization::Visualization> vis_ptr_;
+
+    void generateMap(double percent_obs)
+    {
+
+    }
 
     void reset()
     {
@@ -298,6 +305,7 @@ namespace path_plan
         usleep(100000);
         double  random01 = dis(gen);
         double min_houristic = DBL_MAX;
+      
         RRTNode3DPtr nodeSi, nodeGi ,selected_SI, selected_GI; 
         Eigen::Vector3d x_rand;
         nodesA = kd_nearest_range3(treeA, 0, 0, 0, DBL_MAX);
@@ -335,12 +343,14 @@ namespace path_plan
         {
           x_rand = selected_GI->x;
         }
-        // else if (random01 > brrt_optimize_p1_ && random01 < brrt_optimize_p1_ + brrt_optimize_p2_)
-        else if (false)
+        else if (random01 > brrt_optimize_p1_ && random01 < brrt_optimize_p1_ + brrt_optimize_p2_)
+        // else if (false)
         {
           Eigen::Vector3d center = (selected_SI->x + selected_GI->x) / 2.0;
-          double radius = (selected_SI->x - selected_GI->x).norm() / 2.0;
+          // double radius = (selected_SI->x - selected_GI->x).norm() / 2.0;
+          double radius = 3*brrt_optimize_step_;
 
+          //sample trong ban kinh 3x 
           double u = dis(gen) * 2.0 - 1.0; // Random value in [-1, 1]
           double theta = dis(gen) * 2.0 * M_PI; // Random angle in [0, 2π]
           double phi = acos(u); // Random angle in [0, π]
