@@ -22,6 +22,7 @@ catkin_package(
   CATKIN_DEPENDS occ_grid
 #  DEPENDS system_lib
 )
+add_definitions(-DDEBUG) # debug mode
 
 include_directories(
   include

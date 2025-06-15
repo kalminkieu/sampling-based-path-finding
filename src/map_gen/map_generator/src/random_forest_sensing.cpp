@@ -83,8 +83,8 @@ void RandomBRRTGenerate()
          }
       }
    }
-   
 
+   
    cloudMap.width = cloudMap.points.size();
    cloudMap.height = 1;
    cloudMap.is_dense = true;

@@ -25,7 +25,7 @@
 
   <arg name="brrt_optimize_p3" value="0.1" />
   <arg name="brrt_optimize_p2" value="0.0" />
-  <arg name="brrt_optimize_p1" value="0.0" />
+  <arg name="brrt_optimize_p1" value="0.5" />
   <arg name="brrt_step" value="0.5" />
 
   <arg name="brrt_alpha" value="0.5" />

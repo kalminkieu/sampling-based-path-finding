@@ -25,7 +25,7 @@ OF SUCH DAMAGE.
 #include "path_finder/rrt.h"
 #include "path_finder/brrt.h"
 #include "path_finder/brrt_star.h"
-#include "path_finder/brrt_optimize.h"
+#include "path_finder/brrt_sample_gravity.h"
 #include "visualization/visualization.hpp"
 
 #include <ros/ros.h>

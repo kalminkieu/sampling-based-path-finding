@@ -46,7 +46,7 @@ public:
     range_ = range;
   }
 
-  void samplingOnce(Eigen::Vector3d &sample,bool outz = false)
+  void samplingOnce(Eigen::Vector3d &sample)
   {
     if (informed_)
     {
@@ -58,24 +58,16 @@ public:
     }
     else
     {
-      uniformSamplingOnce(sample,outz);
+      uniformSamplingOnce(sample);
     }
   }
 
-  void uniformSamplingOnce(Eigen::Vector3d &sample,bool outz = false)
+  void uniformSamplingOnce(Eigen::Vector3d &sample)
   {
-    if (outz)
-    {
-      sample[0] = uniform_rand_(gen_);
-      sample[1] = uniform_rand_(gen_);
-      sample[2] = 0.5;
-    }
-    else
-    {
-      sample[0] = uniform_rand_(gen_);
-      sample[1] = uniform_rand_(gen_);
-      sample[2] = uniform_rand_(gen_);
-    }
+
+    sample[0] = uniform_rand_(gen_);
+    sample[1] = uniform_rand_(gen_);
+    sample[2] = uniform_rand_(gen_);
     sample.array() *= range_.array();
     sample += origin_;
   };

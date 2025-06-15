@@ -271,11 +271,11 @@ namespace path_plan
       {
         /* random sampling */
         Eigen::Vector3d x_rand;
-        sampler_.samplingOnce(x_rand,true);
+        sampler_.samplingOnce(x_rand);
         // samplingOnce(x_rand);
         while (!map_ptr_->isStateValid(x_rand))
         {
-          sampler_.samplingOnce(x_rand,true);
+          sampler_.samplingOnce(x_rand);
         }
 
         /* request nearest node in treeA */
@@ -289,8 +289,8 @@ namespace path_plan
         kd_res_free(p_nearestA);
 
         /* Extend treeA */
-        // Eigen::Vector3d x_new = steer(nearest_nodeA->x, x_rand, steer_length_);
-        Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, steer_length_);
+        Eigen::Vector3d x_new = steer(nearest_nodeA->x, x_rand, steer_length_);
+        // Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, steer_length_);
         if ( (!map_ptr_->isStateValid(x_new)) || (!map_ptr_->isSegmentValid(nearest_nodeA->x, x_new)) ) 
         {
           /* Steer Trapped */
