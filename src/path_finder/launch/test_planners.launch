@@ -37,7 +37,7 @@
   <node pkg="path_finder" type="path_finder" name="path_finder_node" output="screen">
     <remap from="/global_cloud" to="$(arg global_env_pcd2_topic)"/>
 
-    <param name="run_rrt" value="$(arg run_rrt)" type="bool"/>
+    <param name="run_rrt" value="$(arg run_rrt)" type="bool"/> 
     <param name="run_rrt_star" value="$(arg run_rrt_star)" type="bool"/>
     <param name="run_rrt_sharp" value="$(arg run_rrt_sharp)" type="bool"/>
     <param name="run_brrt" value="$(arg run_brrt)" type="bool"/>
