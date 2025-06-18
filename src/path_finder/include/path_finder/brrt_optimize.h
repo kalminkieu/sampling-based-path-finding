@@ -369,7 +369,7 @@ namespace path_plan
           {
             sampler_.samplingOnce(x_rand,true);
           }
-          // usleep(1000000);
+          usleep(1000000);
 
         }
 
@@ -377,7 +377,7 @@ namespace path_plan
         struct kdres *p_nearestA = kd_nearest3(treeA, x_rand[0], x_rand[1], x_rand[2]);
         
         // RRTNode3DPtr nearest_nodeA = (RRTNode3DPtr)kd_res_item_data(p_nearestA); //=si
-        RRTNode3DPtr nearest_nodeA = p_nearestA
+        RRTNode3DPtr nearest_nodeA = (RRTNode3DPtr)nodesB;
         Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, brrt_optimize_step_);
         if (vis_ptr_)
         {
@@ -410,7 +410,7 @@ namespace path_plan
 
         /* request x_new's nearest node in treeB */
         // struct kdres *p_nearestB = kd_nearest3(treeB, x_new[0], x_new[1], x_new[2]);//ti
-        struct kdres *p_nearestB = 
+        struct kdres *p_nearestB = nodesA;
         if (p_nearestB == nullptr)
         {
           ROS_ERROR("nearest query error");
