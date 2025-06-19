@@ -107,7 +107,13 @@ namespace path_plan
     {
       vis_ptr_ = visPtr;
     };
-
+    int get_number_of_iteration(){
+      return number_of_iterations_;
+    }
+    int  get_valid_tree_node_nums()
+    {
+      return valid_tree_node_nums_;
+    }
   private:
     // nodehandle params
     ros::NodeHandle nh_;
@@ -119,6 +125,7 @@ namespace path_plan
     int max_iteration_;
     int max_tree_node_nums_;
     int valid_tree_node_nums_;
+    int number_of_iterations_;
     double first_path_use_time_;
     double final_path_use_time_;
 
@@ -266,8 +273,8 @@ namespace path_plan
       kdtree *treeB = kdtree_2;
 
       /* main loop */
-      int idx = 0;
-      for (idx = 0; idx < max_iteration_; ++idx)
+      number_of_iterations_ = 0;
+      for (number_of_iterations_ = 0; number_of_iterations_ < max_iteration_; ++number_of_iterations_)
       {
         /* random sampling */
         Eigen::Vector3d x_rand;
@@ -290,7 +297,6 @@ namespace path_plan
 
         /* Extend treeA */
         Eigen::Vector3d x_new = steer(nearest_nodeA->x, x_rand, steer_length_);
-        // Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, steer_length_);
         if ( (!map_ptr_->isStateValid(x_new)) || (!map_ptr_->isSegmentValid(nearest_nodeA->x, x_new)) ) 
         {
           /* Steer Trapped */
@@ -347,7 +353,7 @@ namespace path_plan
             solution_cost_time_pair_list_.emplace_back(path_cost, (ros::Time::now() - rrt_start_time).toSec());
             cost_best_ = path_cost;
           }
-          std::cout << "[BRRT]**********find path after " << idx << " iterations" << std::endl;
+          // std::cout << "[BRRT]**********find path after " << number_of_iterations_ << " iterations" << std::endl;
           break;
         }
         // visualizeWholeTree();
@@ -356,11 +362,11 @@ namespace path_plan
         path_reverse = !path_reverse;
       }//End of sampling iteration
       
-      visualizeWholeTree();
+      // visualizeWholeTree();
       if (tree_connected)
       {
         final_path_use_time_ = (ros::Time::now() - rrt_start_time).toSec();
-        ROS_INFO_STREAM("[BRRT]: find_path_use_time: " << solution_cost_time_pair_list_.front().second << ", length: " << solution_cost_time_pair_list_.front().first);
+        // ROS_INFO_STREAM("[BRRT]: find_path_use_time: " << solution_cost_time_pair_list_.front().second << ", length: " << solution_cost_time_pair_list_.front().first);
         // visualizeWholeTree();
         final_path_ = path_list_.back();
         

@@ -10,7 +10,7 @@
   <arg name="origin_z" value=" -1.0" />
   <arg name="resolution" value="0.5" />
 
-  <arg name="steer_length" value="60.0" />
+  <arg name="steer_length" value="1.0" />
   <arg name="search_radius" value="60.0" />
   <arg name="search_time" value="1" />
   <arg name="max_tree_node_nums" value="100000" />
@@ -34,7 +34,7 @@
   <arg name="brrt_max_iteration" value="1000" />
 
 
-  <node pkg="path_finder" type="path_finder" name="path_finder_node" output="screen">
+  <node pkg="path_finder" type="path_finder" name="path_finder_node" output="screen" required="true">
     <remap from="/global_cloud" to="$(arg global_env_pcd2_topic)"/>
 
     <param name="run_rrt" value="$(arg run_rrt)" type="bool"/>
@@ -86,14 +86,14 @@
 
 
     <param name="BRRT_Optimize/p1" value="$(arg brrt_optimize_p1)" type="double"/>
-    <param name="BRRT_Optimize/p2" value="$(arg brrt_optimize_p2)" type="double"/>
-    <param name="BRRT_Optimize/p3" value="$(arg brrt_optimize_p3)" type="double"/>
+    <param name="BRRT_Optimize/u_p" value="4" type="double"/>
     <param name="BRRT_Optimize/step" value="$(arg brrt_step)" type="double"/>
 
     <param name="BRRT_Optimize/alpha" value="$(arg brrt_alpha)" type="double"/>
     <param name="BRRT_Optimize/beta" value="$(arg brrt_beta)" type="double"/>
     <param name="BRRT_Optimize/gamma" value="$(arg brrt_gamma)" type="double"/>
     <param name="BRRT_Optimize/max_iteration" value="$(arg brrt_max_iteration)" type="int"/>
+    
   </node>
 
 </launch>

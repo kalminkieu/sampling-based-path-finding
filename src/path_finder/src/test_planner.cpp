@@ -26,11 +26,13 @@ OF SUCH DAMAGE.
 #include "path_finder/brrt.h"
 #include "path_finder/brrt_star.h"
 #include "path_finder/brrt_sample_gravity.h"
+#include "path_finder/testcase.h"
 #include "visualization/visualization.hpp"
-
+#include "path_finder/sampler.h"
 #include <ros/ros.h>
 #include <geometry_msgs/PoseStamped.h>
 
+#define NUMBER_TEST_TIMES 1000
 class TesterPathFinder
 {
 private:
@@ -51,14 +53,19 @@ private:
     Eigen::Vector3d start_, goal_;
 
     bool run_rrt_, run_rrt_star_, run_rrt_sharp_;
-    bool run_brrt_, run_brrt_star_,run_brrt_optimize_;
+    bool run_brrt_, run_brrt_star_, run_brrt_optimize_;
+    // Implement for testing path planning algorithms
+    BiasSampler sampler_;
+    BRRTExperimentMultiAlgo *manager;
 
 public:
     TesterPathFinder(const ros::NodeHandle &nh) : nh_(nh)
     {
         env_ptr_ = std::make_shared<env::OccMap>();
         env_ptr_->init(nh_);
-
+        manager = new BRRTExperimentMultiAlgo(
+            "/home/x/sampling-based-path-finding/brrt_input.json",
+            "/home/x/sampling-based-path-finding/brrt_output");
         vis_ptr_ = std::make_shared<visualization::Visualization>(nh_);
         vis_ptr_->registe<visualization_msgs::Marker>("start");
         vis_ptr_->registe<visualization_msgs::Marker>("goal");
@@ -107,7 +114,10 @@ public:
         nh_.param("run_brrt_star", run_brrt_star_, false);
         nh_.param("run_brrt_optimize", run_brrt_optimize_, false);
     }
-    ~TesterPathFinder(){};
+    ~TesterPathFinder()
+    {
+        delete manager;
+    };
 
     void goalCallback(const geometry_msgs::PoseStamped::ConstPtr &goal_msg)
     {
@@ -197,7 +207,8 @@ public:
                 ROS_INFO_STREAM("[BRRT*] final path len: " << slns.back().first);
             }
         }
-        if (run_brrt_optimize_){
+        if (run_brrt_optimize_)
+        {
             bool brrt_optimize_res = brrt_optimize_ptr_->plan(start_, goal_);
             if (brrt_optimize_res)
             {
@@ -208,12 +219,28 @@ public:
                 ROS_INFO_STREAM("[BRRTOpitmize*] final path len: " << slns.back().first);
             }
         }
-        
+
         start_ = goal_;
     }
-
+    void print_vector3d(std::string name, Eigen::Vector3d &p)
+    {
+        std::cout << name << " x: " << p[0] << " y: " << p[1] << " z: " << p[2] << std::endl;
+    }
+    Eigen::Vector3d get_sample_valid()
+    {
+        Eigen::Vector3d x_rand;
+        sampler_.setSamplingRange(env_ptr_->getOrigin(), env_ptr_->getMapSize());
+        sampler_.samplingOnce(x_rand);
+        // samplingOnce(x_rand);
+        while (!env_ptr_->isStateValid(x_rand))
+        {
+            sampler_.samplingOnce(x_rand);
+        }
+        return x_rand;
+    }
     void executionCallback(const ros::TimerEvent &event)
     {
+
         if (!env_ptr_->mapValid())
         {
             ROS_INFO("no map rcved yet.");
@@ -224,8 +251,63 @@ public:
         else
         {
             execution_timer_.stop();
+            ROS_WARN("Timer tick");
+            experiment_test();
         }
     };
+    void experiment_test()
+    {
+        for (int i = 0; i < NUMBER_TEST_TIMES; ++i)
+        {
+
+
+            Eigen::Vector3d goal = get_sample_valid();
+            print_vector3d("Start Vector", start_);
+            print_vector3d("Goal Vector", goal);
+            // if (manager->current_run_index() > NUMBER_TEST_TIMES) {
+            //
+            //     return;
+            // }
+            const auto &input = manager->get_input();
+            ROS_INFO("Running Test %d - Run #%d", input.trial, manager->current_run_index());
+
+            std::map<std::string, AlgoResult> algo_outputs;
+
+            // Simulate BRRT
+            bool brrt_res = brrt_ptr_->plan(start_, goal_);
+            if (brrt_res)
+            {
+                vector<std::pair<double, double>> slns = brrt_ptr_->getSolutions();
+                int num_nodes = brrt_ptr_->get_valid_tree_node_nums();
+                int num_iterations = brrt_ptr_->get_number_of_iteration();
+                algo_outputs["BRRT"] = {true, slns.back().second, slns.back().first, num_nodes, num_iterations, start_, goal_};
+            }
+            else
+            {
+                algo_outputs["BRRT"] = {false, 0.0, 0.0, 0, 0, start_, goal_};
+            }
+            // Simulate BRRT Optimize
+            brrt_optimize_ptr_->set_heuristic_param(input.p1, input.u_p, input.alpha, input.beta, input.gamma);
+            bool brrt_optimize_res = brrt_optimize_ptr_->plan(start_, goal_);
+            if (brrt_optimize_res)
+            {
+                vector<std::pair<double, double>> slns = brrt_optimize_ptr_->getSolutions();
+                int num_nodes = brrt_optimize_ptr_->get_valid_tree_node_nums();
+                int num_iterations = brrt_optimize_ptr_->get_number_of_iteration();
+                algo_outputs["BRRT_Optimize"] = {true, slns.back().second, slns.back().first, num_nodes, num_iterations, start_, goal_};
+            }
+            else
+            {
+                algo_outputs["BRRT_Optimize"] = {false, 0.0, 0.0, 0, 0, start_, goal_};
+            }
+            start_ = goal;
+
+            manager->store_output_for_run(algo_outputs);
+        }
+        manager->save_json();
+        ROS_INFO("Completed all runs.");
+        ros::shutdown();
+    }
 };
 
 int main(int argc, char **argv)
