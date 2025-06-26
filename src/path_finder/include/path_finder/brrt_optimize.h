@@ -32,7 +32,7 @@ OF SUCH DAMAGE.
 #include <queue>
 #include <algorithm>
 
-#include<random>
+#include <random>
 namespace path_plan
 {
   class BRRT_Optimize
@@ -50,14 +50,13 @@ namespace path_plan
       nh_.param("BRRT_Optimize/p3", brrt_optimize_p3_, 0.1);
       nh_.param("BRRT_Optimize/step", brrt_optimize_step_, 0.1);
 
-
       nh_.param("BRRT_Optimize/alpha", brrt_optimize_alpha_, 0.5);
       nh_.param("BRRT_Optimize/beta", brrt_optimize_beta_, 0.3);
       nh_.param("BRRT_Optimize/gamma", brrt_optimize_gamma_, 0.5);
 
       nh_.param("BRRT_Optimize/max_iteration", max_iteration_, 0);
 
-      std::cout << "[BRRT_Optimize] param: p1: " << brrt_optimize_p1_ << "p2: " << brrt_optimize_p2_ << "p3: " << brrt_optimize_p3_ <<" step: " << brrt_optimize_step_<< std::endl;
+      std::cout << "[BRRT_Optimize] param: p1: " << brrt_optimize_p1_ << "p2: " << brrt_optimize_p2_ << "p3: " << brrt_optimize_p3_ << " step: " << brrt_optimize_step_ << std::endl;
       std::cout << "[BRRT_Optimize] param: alpha: " << brrt_optimize_alpha_ << " beta: " << brrt_optimize_beta_ << " gamma: " << brrt_optimize_gamma_ << std::endl;
       ROS_WARN_STREAM("[BRRT_Optimize] param: steer_length: " << steer_length_);
       ROS_WARN_STREAM("[BRRT_Optimize] param: search_time: " << search_time_);
@@ -157,7 +156,6 @@ namespace path_plan
 
     void generateMap(double percent_obs)
     {
-
     }
 
     void reset()
@@ -276,10 +274,10 @@ namespace path_plan
 
     bool brrt_optimize(const Eigen::Vector3d &s, const Eigen::Vector3d &g)
     {
-      ros::Time rrt_start_time = ros::Time::now(); //doc config : beta alpha, steer, stepsize
+      ros::Time rrt_start_time = ros::Time::now(); // doc config : beta alpha, steer, stepsize
       bool tree_connected = false;
       bool path_reverse = false;
-     
+
       /* kd tree init */
       kdtree *kdtree_1 = kd_create(3);
       kdtree *kdtree_2 = kd_create(3);
@@ -290,34 +288,114 @@ namespace path_plan
       kdtree *treeA = kdtree_1;
       kdtree *treeB = kdtree_2;
 
-      std::random_device rd;                               // Seed
-      std::mt19937 gen(rd());                              // Mersenne Twister engine
+      std::random_device rd;                                // Seed
+      std::mt19937 gen(rd());                               // Mersenne Twister engine
       std::uniform_real_distribution<double> dis(0.0, 1.0); // Uniform distribution [0,1)
+      double random01 = dis(gen);
+      Eigen::Vector3d x_rand;
       Eigen::Vector3d si_gi, si_G, gi_S;
+
       double si_gi_dist, si_G_dist, gi_S_dist, h;
       struct kdres *nodesB, *nodesA;
       /* main loop */
       int idx = 0;
-      for (idx = 0; idx < max_iteration_; ++idx) 
+      for (idx = 0; idx < max_iteration_; ++idx)
       {
         /* random sampling */
         // std::cout << "=====================================idx: " << idx << std::endl;
         usleep(100000);
-        double  random01 = dis(gen);
-        double min_houristic = DBL_MAX;
-      
-        RRTNode3DPtr nodeSi, nodeGi ,selected_SI, selected_GI; 
+        double random01 = dis(gen);
+        double min_heuristic = DBL_MAX;
+
+        // Kiem guide pair (s_guide, t_guide) bang heuristic
+        RRTNode3DPtr nodeSi, nodeGi, selected_SI, selected_GI;
+        RRTNode3DPtr s_guide = nullptr;
+        RRTNode3DPtr t_guide = nullptr;
+        nodesA = kd_nearest_range3(treeA, 0, 0, 0, DBL_MAX);
+        for (int i = 0; i < kd_res_size(nodesA); ++i)
+        {
+          RRTNode3DPtr nodeSi = (RRTNode3DPtr)kd_res_item_data(nodesA);
+          nodesB = kd_nearest_range3(treeB, 0, 0, 0, DBL_MAX);
+          for (int j = 0; j < kd_res_size(nodesB); ++j)
+          {
+            RRTNode3DPtr nodeTj = (RRTNode3DPtr)kd_res_item_data(nodesB);
+            Eigen::Vector3d si = nodeSi->x;
+            Eigen::Vector3d tj = nodeTj->x;
+            double d_si_tj = (si - tj).norm();
+            double d_si_t0 = (si - goal_node_->x).norm();
+            double d_tj_s0 = (tj - start_node_->x).norm();
+            double h = brrt_optimize_alpha_ * d_si_tj + brrt_optimize_beta_ * d_si_t0 + brrt_optimize_gamma_ * d_tj_s0;
+            if (h < min_heuristic)
+            {
+              min_heuristic = h;
+              s_guide = nodeSi;
+              t_guide = nodeTj;
+            }
+            kd_res_next(nodesB);
+          }
+          kd_res_next(nodesA);
+        }
+        kd_res_free(nodesA);
+        kd_res_free(nodesB);
+
+        if (s_guide == nullptr || t_guide == nullptr)
+        {
+          ROS_ERROR("No suitable guide pair found");
+          continue;
+        }
+
+        // Set nearest_nodeA to s_guide (si from the optimal pair)
+        RRTNode3DPtr nearest_nodeA = s_guide;
+
+        // Generate x_rand based on probabilities
+        if (random01 < brrt_optimize_p1_)
+        {                                       // p1 = 0.1
+          x_rand = sampler_.samplingOnce(x_rand,true); // Uniform sampling in free space
+          while (!map_ptr_->isStateValid(x_rand))
+          {
+            x_rand = sampler_.samplingOnce(x_rand,true);
+          }
+        }
+        else if (random01 < brrt_optimize_p1_ + brrt_optimize_p2_)
+        { // p2 = 0.1
+          // Sample within a circle around (s_guide, t_guide) intersection with free space
+          double radius = 3 * brrt_optimize_step_; // Example radius
+          double u = dis(gen) * 2.0 - 1.0;
+          double theta = dis(gen) * 2.0 * M_PI;
+          double r = cbrt(dis(gen)) * radius;
+          Eigen::Vector3d center = (s_guide->x + t_guide->x) / 2.0;
+          x_rand[0] = center[0] + r * sin(theta);
+          x_rand[1] = center[1] + r * cos(theta);
+          x_rand[2] = center[2]; // Assuming 2D circle for simplicity, adjust for 3D if needed
+          if (!map_ptr_->isStateValid(x_rand))
+          {
+            x_rand = t_guide->x; // Fall back if invalid
+          }
+        }
+        else
+        {                      // p3 = 0.8
+          x_rand = t_guide->x; // Use t_guide as x_rand
+        }
+
+        // Proceed with steering and other logic using nearest_nodeA and x_rand
+        Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, brrt_optimize_step_);
+        if (vis_ptr_)
+        {
+          vis_ptr_->visualize_a_ball(x_rand, 0.5, "sample_node", visualization::Color::black);
+          vis_ptr_->visualize_a_ball(x_new, 0.5, "q_nearest", visualization::Color::yellow);
+        }
+
         Eigen::Vector3d x_rand;
         nodesA = kd_nearest_range3(treeA, 0, 0, 0, DBL_MAX);
 
-
         selected_GI = goal_node_;
         selected_SI = start_node_;
+
         for (int i = 0; i < kd_res_size(nodesA); ++i)
         {
           nodeSi = (RRTNode3DPtr)kd_res_item_data(nodesA);
           nodesB = kd_nearest_range3(treeB, 0, 0, 0, DBL_MAX);
-          for (int j=0; j <kd_res_size(nodesB); ++j)
+          for (int j = 0; j < kd_res_size(nodesB); ++j)
           {
             nodeGi = (RRTNode3DPtr)kd_res_item_data(nodesB);
             si_gi = nodeSi->x - nodeGi->x;
@@ -327,12 +405,12 @@ namespace path_plan
             si_G_dist = si_G.norm();
             gi_S_dist = gi_S.norm();
             h = brrt_optimize_alpha_ * si_gi_dist + brrt_optimize_beta_ * si_G_dist + brrt_optimize_gamma_ * gi_S_dist;
-            if (h < min_houristic)
+            if (h < min_heuristic)
             {
-              min_houristic = h;
+              min_heuristic = h;
               selected_SI = nodeSi;
-              selected_GI = nodeGi; 
-            } 
+              selected_GI = nodeGi;
+            }
             kd_res_next(nodesB);
           }
           kd_res_next(nodesA);
@@ -348,12 +426,12 @@ namespace path_plan
         {
           Eigen::Vector3d center = selected_SI->x / 2.0; // tam si
           // double radius = (selected_SI->x - selected_GI->x).norm() / 2.0;
-          double radius = 3*brrt_optimize_step_;
+          double radius = 3 * brrt_optimize_step_;
 
-          //sample trong ban kinh 3x
-          double u = dis(gen) * 2.0 - 1.0; // Random value in [-1, 1]
+          // sample trong ban kinh 3x
+          double u = dis(gen) * 2.0 - 1.0;      // Random value in [-1, 1]
           double theta = dis(gen) * 2.0 * M_PI; // Random angle in [0, 2π]
-          double phi = acos(u); // Random angle in [0, π]
+          double phi = acos(u);                 // Random angle in [0, π]
 
           double r = cbrt(dis(gen)) * radius; // Random radius scaled by cube root for uniform distribution
 
@@ -363,29 +441,27 @@ namespace path_plan
         }
         else
         {
-          sampler_.samplingOnce(x_rand,true);
+          sampler_.samplingOnce(x_rand, true);
           // samplingOnce(x_rand);
           while (!map_ptr_->isStateValid(x_rand))
           {
-            sampler_.samplingOnce(x_rand,true);
+            sampler_.samplingOnce(x_rand, true);
           }
           usleep(1000000);
-
         }
 
-
         struct kdres *p_nearestA = kd_nearest3(treeA, x_rand[0], x_rand[1], x_rand[2]);
-        
+
         // RRTNode3DPtr nearest_nodeA = (RRTNode3DPtr)kd_res_item_data(p_nearestA); //=si
-        RRTNode3DPtr nearest_nodeA = (RRTNode3DPtr)nodesB;
-        Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, brrt_optimize_step_);
+
+        Eigen::Vector3d x_new2 = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, brrt_optimize_step_);
         if (vis_ptr_)
         {
           vis_ptr_->visualize_a_ball(x_rand, 0.5, "sample_node", visualization::Color::black);
-          vis_ptr_->visualize_a_ball(x_new, 0.5, "q_nearest", visualization::Color::yellow);
+          vis_ptr_->visualize_a_ball(x_new2 , 0.5, "q_nearest", visualization::Color::yellow);
         }
         /* request nearest node in treeA */
-        
+
         if (p_nearestA == nullptr)
         {
           ROS_ERROR("nearest query error");
@@ -394,7 +470,7 @@ namespace path_plan
 
         kd_res_free(p_nearestA);
 
-        if ((!map_ptr_->isStateValid(x_new)) || (!map_ptr_->isSegmentValid(nearest_nodeA->x, x_new)))
+        if ((!map_ptr_->isStateValid(x_new2)) || (!map_ptr_->isSegmentValid(nearest_nodeA->x, x_new2)))
         {
           /* Steer Trapped */
           std::swap(treeA, treeB);
@@ -405,23 +481,60 @@ namespace path_plan
         /* Add x_new to treeA */
         double dist_from_A = nearest_nodeA->cost_from_start + steer_length_;
         RRTNode3DPtr new_nodeA(nullptr);
-        new_nodeA = addTreeNode(nearest_nodeA, x_new, dist_from_A, steer_length_);
-        kd_insert3(treeA, x_new[0], x_new[1], x_new[2], new_nodeA);
+        new_nodeA = addTreeNode(nearest_nodeA, x_new2, dist_from_A, steer_length_);
+        kd_insert3(treeA, x_new2[0], x_new2[1], x_new2[2], new_nodeA);
 
         /* request x_new's nearest node in treeB */
         // struct kdres *p_nearestB = kd_nearest3(treeB, x_new[0], x_new[1], x_new[2]);//ti
-        struct kdres *p_nearestB = nodesA;
+        // change here
+
+        struct kdres *p_nearestB = nullptr;
+        double min = DBL_MAX;
+        Eigen::Vector3d si = x_new2; // si from treeA
+        Eigen::Vector3d s0 = start_node_->x;
+        Eigen::Vector3d t0 = goal_node_->x;
+        RRTNode3DPtr nearest_nodeB = (RRTNode3DPtr)kd_res_item_data(p_nearestB);
+        struct kdres *candidate = kd_nearest_range3(treeB, x_new2[0], x_new2[1], x_new2[2], 5.0) ;
+        while (candidate != nullptr)
+        {
+          
+          struct kdres *curr = candidate;
+          while (!kd_res_end(curr))
+          {
+            
+            RRTNode3DPtr nodeTj = (RRTNode3DPtr)kd_res_item_data(curr);
+            Eigen::Vector3d tj = nodeTj->x;
+
+            double d_si_tj = (si - tj).norm();
+            double d_tj_s0 = (tj - s0).norm();
+            double d_si_t0 = (si - t0).norm();
+            double heuristic = brrt_optimize_alpha_ * d_si_tj + brrt_optimize_beta_ * d_tj_s0 + brrt_optimize_gamma_ * d_si_t0;
+            if (heuristic < min)
+            {
+              min = heuristic;
+              nearest_nodeB = nodeTj;
+            }
+            kd_res_next(curr);
+          }
+          kd_res_free(candidate);
+        }
+        if (nearest_nodeB == nullptr)
+        {
+          ROS_ERROR("No suitable tj found");
+          continue;
+        }
+
         if (p_nearestB == nullptr)
         {
           ROS_ERROR("nearest query error");
           continue;
         }
-        RRTNode3DPtr nearest_nodeB = (RRTNode3DPtr)kd_res_item_data(p_nearestB);
+
         kd_res_free(p_nearestB);
 
         /* Greedy steer & check connection */
         vector<Eigen::Vector3d> x_connects;
-        bool isConnected = greedySteer(nearest_nodeB->x, x_new, x_connects, steer_length_);
+        bool isConnected = greedySteer(nearest_nodeB->x, x_new2, x_connects, steer_length_);
 
         /* Add the steered nodes to treeB */
         RRTNode3DPtr new_nodeB = nearest_nodeB;
@@ -443,7 +556,7 @@ namespace path_plan
         /* If connected, trace the connected path */
         if (isConnected)
         {
-          
+
           tree_connected = true;
           double path_cost = new_nodeA->cost_from_start + new_nodeB->cost_from_start + calDist(new_nodeB->x, new_nodeA->x);
           if (path_cost < cost_best_)
@@ -471,7 +584,7 @@ namespace path_plan
       {
         final_path_use_time_ = (ros::Time::now() - rrt_start_time).toSec();
         ROS_INFO_STREAM("[BRRT_Optimize]: find_path_use_time: " << solution_cost_time_pair_list_.front().second << ", length: " << solution_cost_time_pair_list_.front().first);
-        
+
         // vis_ptr_->visualize_a_text(Eigen::Vector3d(0, 0, 0), "find_path_use_time","find_path_use_time: " + std::to_string(solution_cost_time_pair_list_.front().second), visualization::Color::black);
         // vis_ptr_->visualize_a_text(Eigen::Vector3d(0, 0, 0.5), "length","length: " + std::to_string(solution_cost_time_pair_list_.front().first), visualization::Color::black);
 
@@ -490,7 +603,8 @@ namespace path_plan
       return tree_connected;
     }
 
-    void visualizeWholeTree()
+    void
+    visualizeWholeTree()
     {
       // Sample and visualize the resultant tree
       vector<Eigen::Vector3d> vertice;
