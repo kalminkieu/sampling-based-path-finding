@@ -129,7 +129,7 @@ namespace path_plan
     double brrt_optimize_p1_;
     double brrt_optimize_p2_;
     double brrt_optimize_p3_;
-    double brrt_optimize_step_;
+    double brrt_optimize_step_; //stepp size for greedy steer
     double brrt_optimize_alpha_;
     double brrt_optimize_beta_;
     double brrt_optimize_gamma_;
@@ -295,9 +295,11 @@ namespace path_plan
       {
         /* random sampling */
         // std::cout << "=====================================idx: " << idx << std::endl;
-        usleep(100000);
-        double  random01 = dis(gen);
+        // usleep(100000);
+        double  random01 = dis(gen); // Random value in [0, 1)
+        printf("Random value: %f\n", random01);
         double min_houristic = DBL_MAX;
+        printf("Min houristic: %f\n", min_houristic);
         RRTNode3DPtr nodeSi, nodeGi ,selected_SI, selected_GI; 
         Eigen::Vector3d x_rand;
         nodesA = kd_nearest_range3(treeA, 0, 0, 0, DBL_MAX);
@@ -319,6 +321,7 @@ namespace path_plan
             si_G_dist = si_G.norm();
             gi_S_dist = gi_S.norm();
             h = brrt_optimize_alpha_ * si_gi_dist + brrt_optimize_beta_ * si_G_dist + brrt_optimize_gamma_ * gi_S_dist;
+            printf("[BRRT_Optimize] Heuristic: %f, si_gi_dist: %f, si_G_dist: %f, gi_S_dist: %f\n", h, si_gi_dist, si_G_dist, gi_S_dist);            
             if (h < min_houristic)
             {
               min_houristic = h;
@@ -336,10 +339,10 @@ namespace path_plan
           x_rand = selected_GI->x;
         }
         // else if (random01 > brrt_optimize_p1_ && random01 < brrt_optimize_p1_ + brrt_optimize_p2_)
-        else if (false)
+        else if (random01 > 0.2)
         {
-          Eigen::Vector3d center = (selected_SI->x + selected_GI->x) / 2.0;
-          double radius = (selected_SI->x - selected_GI->x).norm() / 2.0;
+          Eigen::Vector3d center = (selected_SI->x) / 2.0;
+          double radius = 3*brrt_step;
 
           double u = dis(gen) * 2.0 - 1.0; // Random value in [-1, 1]
           double theta = dis(gen) * 2.0 * M_PI; // Random angle in [0, 2π]
@@ -366,7 +369,10 @@ namespace path_plan
 
         struct kdres *p_nearestA = kd_nearest3(treeA, x_rand[0], x_rand[1], x_rand[2]);
         RRTNode3DPtr nearest_nodeA = (RRTNode3DPtr)kd_res_item_data(p_nearestA);
+        printf("[BRRT_Optimize] nearest node in treeA: %f, %f, %f\n", nearest_nodeA->x[0], nearest_nodeA->x[1], nearest_nodeA->x[2]);
         Eigen::Vector3d x_new = map_ptr_->getFreeNodeInLine(nearest_nodeA->x, x_rand, brrt_optimize_step_);
+        printf("[BRRT_Optimize] x_new: %f, %f, %f\n", x_new[0], x_new[1], x_new[2]);
+        printf("Step size: %f\n", brrt_optimize_step_);
         if (vis_ptr_)
         {
           vis_ptr_->visualize_a_ball(x_rand, 0.5, "sample_node", visualization::Color::black);
