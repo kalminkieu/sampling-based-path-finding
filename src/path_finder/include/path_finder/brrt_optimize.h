@@ -299,7 +299,8 @@ namespace path_plan
       struct kdres *nodesB, *nodesA;
       /* main loop */
       int idx = 0;
-      for (idx = 0; idx < max_iteration_; ++idx)
+      // for (idx = 0; idx < max_iteration_; ++idx)
+      for (idx = 0; idx < 30000; ++idx)
       {
         /* random sampling */
         // std::cout << "=====================================idx: " << idx << std::endl;
