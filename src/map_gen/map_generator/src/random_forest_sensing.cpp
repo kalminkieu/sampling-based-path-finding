@@ -394,7 +394,7 @@ int main(int argc, char **argv)
    n.param("map/y_size", _y_size, 50.0);
    n.param("map/z_size", _z_size, 5.0);
 
-   n.param("map/obs_num", _obs_num, 30);
+   n.param("map/obs_num", _obs_num, 10);
    n.param("map/circle_num", _cir_num, 30);
    n.param("map/resolution", _resolution, 0.2);
 

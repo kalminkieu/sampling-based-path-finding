@@ -205,7 +205,7 @@ public:
                 vis_ptr_->visualize_path(final_path, "brrt_optimize_final_path");
                 vis_ptr_->visualize_pointcloud(final_path, "brrt_optimize_final_wpts");
                 vector<std::pair<double, double>> slns = brrt_optimize_ptr_->getSolutions();
-                ROS_INFO_STREAM("[BRRTOpitmize*] final path len: " << slns.back().first);
+                ROS_INFO_STREAM("[BRRTOpitmize] final path len: " << slns.back().first);
             }
         }
         

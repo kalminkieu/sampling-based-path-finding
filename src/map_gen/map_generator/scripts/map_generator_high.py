@@ -42,7 +42,7 @@ class map_generator(object):
         self.wall_width = rospy.get_param("~wall_width", default=3.0)
 
 
-        self.rand_obs_scale = rospy.get_param("~rand_obs_scale", default=3.0)
+        self.rand_obs_scale = rospy.get_param("~rand_obs_scale", default=1.0)
         self.rand_obs_num = rospy.get_param("~rand_obs_num", default=5)
         
         
