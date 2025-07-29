@@ -26,6 +26,7 @@ OF SUCH DAMAGE.
 #include "sampler.h"
 #include "node.h"
 #include "kdtree.h"
+#include "path_utils.h"  // ✅ thêm dòng này
 
 #include <ros/ros.h>
 #include <utility>
@@ -129,7 +130,7 @@ namespace path_plan
     vector<Eigen::Vector3d> final_path_;
     vector<vector<Eigen::Vector3d>> path_list_;
     vector<std::pair<double, double>> solution_cost_time_pair_list_;
-
+    
     // environment
     env::OccMap::Ptr map_ptr_;
     std::shared_ptr<visualization::Visualization> vis_ptr_;
@@ -267,7 +268,7 @@ namespace path_plan
 
       /* main loop */
       int idx = 0;
-      for (idx = 0; idx < max_iteration_; ++idx)
+      for (idx = 0; idx < 10000; ++idx)
       {
         /* random sampling */
         Eigen::Vector3d x_rand;
@@ -299,10 +300,15 @@ namespace path_plan
           continue;
         }
 
-        /* Add x_new to treeA */
-        double dist_from_A = nearest_nodeA->cost_from_start + steer_length_;
-        RRTNode3DPtr new_nodeA(nullptr);
-        new_nodeA = addTreeNode(nearest_nodeA, x_new, dist_from_A, steer_length_);
+        /* Add x_new to treeA using true step length */
+         double step_len = (x_new - nearest_nodeA->x).norm();
+         double dist_from_A = nearest_nodeA->cost_from_start + step_len;
+         RRTNode3DPtr new_nodeA = addTreeNode(
+             nearest_nodeA,
+             x_new,
+             /* cost_from_start */ dist_from_A,
+             /* cost_from_parent */ step_len
+        );        
         kd_insert3(treeA, x_new[0], x_new[1], x_new[2], new_nodeA);
 
         /* request x_new's nearest node in treeB */
@@ -326,9 +332,18 @@ namespace path_plan
             valid_tree_node_nums_ = max_tree_node_nums_; //max_node_num reached
             break;}
 
-          for(auto x_connect: x_connects){
-            new_nodeB = addTreeNode(new_nodeB, x_connect, new_nodeB->cost_from_start + steer_length_, steer_length_);
-            kd_insert3(treeB, x_connect[0], x_connect[1], x_connect[2], new_nodeB);
+            for (auto &x_connect : x_connects) {
+            double step_len_T = (x_connect - new_nodeB->x).norm();
+            double cost_B     = new_nodeB->cost_from_start + step_len_T;
+            new_nodeB = addTreeNode(
+                new_nodeB,
+                x_connect,
+                /* cost_from_start */ cost_B,
+                /* cost_from_parent */ step_len_T
+            );
+            kd_insert3(treeB,
+                      x_connect[0], x_connect[1], x_connect[2],
+                      new_nodeB);
           }
         }
         
@@ -360,10 +375,12 @@ namespace path_plan
       if (tree_connected)
       {
         final_path_use_time_ = (ros::Time::now() - rrt_start_time).toSec();
-        ROS_INFO_STREAM("[BRRT]: find_path_use_time: " << solution_cost_time_pair_list_.front().second << ", length: " << solution_cost_time_pair_list_.front().first);
-        // visualizeWholeTree();
-        final_path_ = path_list_.back();
-        
+        final_path_ = path_list_.back();              // lấy path cuối
+        double L = computePathLength(final_path_);    // tính độ dài
+
+        ROS_INFO_STREAM("[BRRT_Optimize]: find_path_use_time: "
+          << final_path_use_time_
+          << ", length: " << L);
       }
       else if (valid_tree_node_nums_ == max_tree_node_nums_)
       {
