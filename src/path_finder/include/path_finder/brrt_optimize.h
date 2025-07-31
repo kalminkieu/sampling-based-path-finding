@@ -22,6 +22,7 @@ namespace path_plan
     BRRT_Optimize() {};
     BRRT_Optimize(const ros::NodeHandle &nh, const env::OccMap::Ptr &mapPtr) : nh_(nh), map_ptr_(mapPtr)
     {
+      resolution_m_per_px_ = mapPtr->getResolution();
       nh_.param("BRRT/steer_length", steer_length_, 0.0);
       nh_.param("BRRT/search_time", search_time_, 0.0);
       nh_.param("BRRT/max_tree_node_nums", max_tree_node_nums_, 0);
@@ -39,7 +40,6 @@ namespace path_plan
       ROS_WARN_STREAM("[BRRT_Optimize] param: max_tree_node_nums: " << max_tree_node_nums_);
 
       sampler_.setSamplingRange(mapPtr->getOrigin(), mapPtr->getMapSize());
-
       valid_tree_node_nums_ = 0;
       nodes_pool_.resize(max_tree_node_nums_);
       for (int i = 0; i < max_tree_node_nums_; ++i)
@@ -97,7 +97,7 @@ namespace path_plan
     int valid_tree_node_nums_;
     double first_path_use_time_;
     double final_path_use_time_;
-
+    double resolution_m_per_px_; // resolution in meters per pixel
     double cost_best_;
     std::vector<TreeNode *> nodes_pool_;
     TreeNode *start_node_;
@@ -123,8 +123,9 @@ namespace path_plan
       valid_tree_node_nums_ = 0;
     }
 
-    double calDist(const Eigen::Vector3d &p1, const Eigen::Vector3d &p2) { return (p1 - p2).norm(); }
-
+    double calDist(const Eigen::Vector3d &p1, const Eigen::Vector3d &p2) {
+      return (p1 - p2).norm() / resolution_m_per_px_;
+    }
     RRTNode3DPtr addTreeNode(RRTNode3DPtr &parent, const Eigen::Vector3d &state,
                              const double &cost_from_start, const double &cost_from_parent)
     {
@@ -266,6 +267,7 @@ namespace path_plan
                 SG_dist = S_Goal.norm();
                 TS_dist = T_Start.norm();
 
+
                 h = brrt_optimize_alpha_ * ST_dist + brrt_optimize_beta_ * SG_dist + brrt_optimize_gamma_ * TS_dist;
 
                 if (h < min_heuristic)
@@ -306,9 +308,14 @@ namespace path_plan
 
       RRTNode3DPtr s_guide = start_node_;
       RRTNode3DPtr t_guide = goal_node_;
-
+      ROS_INFO_STREAM("[BRRT_Optimize]: Start optimizing path with p: " << brrt_optimize_p_);
+      ROS_INFO_STREAM("[BRRT_Optimize]: Max iteration: " << max_iteration_);
+      ROS_INFO_STREAM("[BRRT_Optimize]: Steer length: " << steer_length_);
+      ROS_INFO_STREAM("[BRRT_Optimize]: alpha: " << brrt_optimize_alpha_
+                      << ", beta: " << brrt_optimize_beta_
+                      << ", gamma: " << brrt_optimize_gamma_);
       Eigen::Vector3d q_rand;
-      for (int idx = 0; idx < 10000; ++idx)
+      for (int idx = 0; idx < max_iteration_; ++idx)
       {
         sampler_.samplingOnce(q_rand, true);
         while (!map_ptr_->isStateValid(q_rand))
@@ -331,7 +338,7 @@ namespace path_plan
           Eigen::Vector3d q_new = getFreeNodeInLine(nearest_nodeS->x, q_rand, brrt_optimize_step_, s_guide->x);
           if (map_ptr_->isStateValid(q_new) && map_ptr_->isSegmentValid(nearest_nodeS->x, q_new))
           {
-            double step_len = (q_new - nearest_nodeS->x).norm();
+            double step_len = (q_new - nearest_nodeS->x).norm() / resolution_m_per_px_;
             double dist_from_S = nearest_nodeS->cost_from_start + step_len;
             RRTNode3DPtr new_nodeS = addTreeNode(nearest_nodeS, q_new, dist_from_S, step_len);
             kd_insert3(treeS, q_new[0], q_new[1], q_new[2], new_nodeS);
@@ -363,7 +370,9 @@ namespace path_plan
               if (isConnected)
               {
                 tree_connected = true;
-                double path_cost = new_nodeS->cost_from_start + nearest_nodeT->cost_from_start + calDist(nearest_nodeT->x, new_nodeS->x);
+                double path_cost = new_nodeS->cost_from_start
+                                + nearest_nodeT->cost_from_start
+                                + calDist(nearest_nodeT->x, new_nodeS->x);                
                 if (path_cost < cost_best_)
                 {
                   vector<Eigen::Vector3d> curr_best_path;

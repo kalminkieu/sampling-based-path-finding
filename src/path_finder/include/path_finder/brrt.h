@@ -41,6 +41,7 @@ namespace path_plan
     BRRT(){};
     BRRT(const ros::NodeHandle &nh, const env::OccMap::Ptr &mapPtr) : nh_(nh), map_ptr_(mapPtr)
     {
+      resolution_m_per_px_ = mapPtr->getResolution();
       nh_.param("BRRT/steer_length", steer_length_, 0.0);
       nh_.param("BRRT/search_time", search_time_, 0.0);
       nh_.param("BRRT/max_tree_node_nums", max_tree_node_nums_, 0);
@@ -48,7 +49,7 @@ namespace path_plan
       ROS_WARN_STREAM("[BRRT] param: steer_length: " << steer_length_);
       ROS_WARN_STREAM("[BRRT] param: search_time: " << search_time_);
       ROS_WARN_STREAM("[BRRT] param: max_tree_node_nums: " << max_tree_node_nums_);
-
+      
       sampler_.setSamplingRange(mapPtr->getOrigin(), mapPtr->getMapSize());
 
       valid_tree_node_nums_ = 0;
@@ -122,7 +123,7 @@ namespace path_plan
     int valid_tree_node_nums_;
     double first_path_use_time_;
     double final_path_use_time_;
-
+    double resolution_m_per_px_; // resolution in meters per pixel
     double cost_best_;
     std::vector<TreeNode *> nodes_pool_;
     TreeNode *start_node_;
@@ -151,9 +152,10 @@ namespace path_plan
     }
 
     double calDist(const Eigen::Vector3d &p1, const Eigen::Vector3d &p2)
-    {
-      return (p1 - p2).norm();
-    }
+        {
+          // norm() gives meters; divide by (m/px) to get pixels
+          return (p1 - p2).norm() / resolution_m_per_px_;
+        }
 
     RRTNode3DPtr addTreeNode(RRTNode3DPtr &parent, const Eigen::Vector3d &state,
                              const double &cost_from_start, const double &cost_from_parent)
@@ -268,7 +270,7 @@ namespace path_plan
 
       /* main loop */
       int idx = 0;
-      for (idx = 0; idx < 10000; ++idx)
+      for (idx = 0; idx < max_iteration_; ++idx)
       {
         /* random sampling */
         Eigen::Vector3d x_rand;
@@ -301,7 +303,7 @@ namespace path_plan
         }
 
         /* Add x_new to treeA using true step length */
-         double step_len = (x_new - nearest_nodeA->x).norm();
+         double step_len = (x_new - nearest_nodeA->x).norm()  / resolution_m_per_px_;;
          double dist_from_A = nearest_nodeA->cost_from_start + step_len;
          RRTNode3DPtr new_nodeA = addTreeNode(
              nearest_nodeA,
@@ -350,7 +352,9 @@ namespace path_plan
         /* If connected, trace the connected path */
         if(isConnected){
           tree_connected = true;
-          double path_cost = new_nodeA->cost_from_start + new_nodeB->cost_from_start + calDist(new_nodeB->x, new_nodeA->x);
+          double path_cost = new_nodeA->cost_from_start
+                           + new_nodeB->cost_from_start
+                           + calDist(new_nodeB->x, new_nodeA->x);          
           if(path_cost < cost_best_)
           { 
             vector<Eigen::Vector3d> curr_best_path;
