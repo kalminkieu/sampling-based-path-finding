@@ -155,7 +155,7 @@ public:
                 vis_ptr_->visualize_path(final_path, "rrt_star_final_path");
                 vis_ptr_->visualize_pointcloud(final_path, "rrt_star_final_wpts");
                 vector<std::pair<double, double>> slns = rrt_star_ptr_->getSolutions();
-                ROS_INFO_STREAM("[RRT*] final path len: " << slns.back().first);
+                // ROS_INFO_STREAM("[RRT*] final path len: " << slns.back().first);
             }
         }
 
@@ -168,7 +168,7 @@ public:
                 vis_ptr_->visualize_path(final_path, "rrt_sharp_final_path");
                 vis_ptr_->visualize_pointcloud(final_path, "rrt_sharp_final_wpts");
                 vector<std::pair<double, double>> slns = rrt_sharp_ptr_->getSolutions();
-                ROS_INFO_STREAM("[RRT#] final path len: " << slns.back().first);
+                // ROS_INFO_STREAM("[RRT#] final path len: " << slns.back().first);
             }
         }
 
@@ -181,7 +181,7 @@ public:
                 vis_ptr_->visualize_path(final_path, "brrt_final_path");
                 vis_ptr_->visualize_pointcloud(final_path, "brrt_final_wpts");
                 vector<std::pair<double, double>> slns = brrt_ptr_->getSolutions();
-                ROS_INFO_STREAM("[BRRT] final path len: " << slns.back().first);
+                // ROS_INFO_STREAM("[BRRT] final path len: " << slns.back().first);
             }
         }
 
@@ -205,7 +205,7 @@ public:
                 vis_ptr_->visualize_path(final_path, "brrt_optimize_final_path");
                 vis_ptr_->visualize_pointcloud(final_path, "brrt_optimize_final_wpts");
                 vector<std::pair<double, double>> slns = brrt_optimize_ptr_->getSolutions();
-                ROS_INFO_STREAM("[BRRTOpitmize] final path len: " << slns.back().first);
+                // ROS_INFO_STREAM("[BRRTOpitmize] final path len: " << slns.back().first);
             }
         }
         
