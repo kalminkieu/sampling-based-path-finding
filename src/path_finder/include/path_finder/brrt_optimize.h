@@ -257,6 +257,7 @@ namespace path_plan
       kd_insert3(kdtree_2, goal_node_->x[0], goal_node_->x[1], goal_node_->x[2], goal_node_);
       kdtree *treeS = kdtree_1;
       kdtree *treeT = kdtree_2;
+      kdtree *currentTree;
       std::random_device rd;
       std::mt19937 gen(rd());
       std::uniform_real_distribution<double> dis(0.0, 1.0);
@@ -269,15 +270,20 @@ namespace path_plan
                       << ", beta: " << brrt_optimize_beta_
                       << ", gamma: " << brrt_optimize_gamma_);
       Eigen::Vector3d q_rand;
+      int node1 = 0;
+      int node2 = 0;
       for (int idx = 0; idx < max_iteration_; ++idx)
       {
+        //Sampling a random point in the map
         sampler_.samplingOnce(q_rand, true);
         while (!map_ptr_->isStateValid(q_rand))
         {
           sampler_.samplingOnce(q_rand, true);
         }
+        //get a random probabilistic value to decide whether to use guide pair or not
         if (dis(gen) < brrt_optimize_p_)
         {
+          // Use guide pair to steer
           findGuidePair(treeS, treeT, s_guide, t_guide);
           struct kdres *p_nearestS = kd_nearest3(treeS, q_rand[0], q_rand[1], q_rand[2]);
           if (p_nearestS == nullptr)
@@ -286,6 +292,71 @@ namespace path_plan
           }
           RRTNode3DPtr nearest_nodeS = (RRTNode3DPtr)kd_res_item_data(p_nearestS);
           kd_res_free(p_nearestS);
+          Eigen::Vector3d q_new = getFreeNodeInLine(nearest_nodeS->x, q_rand, brrt_optimize_step_, s_guide->x);
+          if (map_ptr_->isStateValid(q_new) && map_ptr_->isSegmentValid(nearest_nodeS->x, q_new))
+          {
+            double step_len = (q_new - nearest_nodeS->x).norm() / resolution_m_per_px_;
+            double dist_from_S = nearest_nodeS->cost_from_start + step_len;
+            RRTNode3DPtr new_nodeS = addTreeNode(nearest_nodeS, q_new, dist_from_S, step_len);
+            kd_insert3(treeS, q_new[0], q_new[1], q_new[2], new_nodeS);
+            struct kdres *p_nearestT = kd_nearest3(treeT, q_new[0], q_new[1], q_new[2]);
+            if (p_nearestT != nullptr)
+            {
+              RRTNode3DPtr nearest_nodeT = (RRTNode3DPtr)kd_res_item_data(p_nearestT);
+              kd_res_free(p_nearestT);
+              vector<Eigen::Vector3d> x_connects;
+              bool isConnected = greedySteer(nearest_nodeT->x, q_new, x_connects, steer_length_);
+              if (!x_connects.empty())
+              {
+                RRTNode3DPtr new_nodeT = nearest_nodeT;
+                for (auto &x_connect : x_connects) {
+                  double step_len_T = (x_connect - new_nodeT->x).norm();
+                  double cost_T = new_nodeT->cost_from_start + step_len_T;
+                  new_nodeT = addTreeNode(new_nodeT, x_connect, cost_T, step_len_T);
+                  kd_insert3(treeT, x_connect[0], x_connect[1], x_connect[2], new_nodeT);
+                }
+              }
+              if (isConnected)
+              {
+                // If the two trees are connected, calculate the path cost and store the path
+                tree_connected = true;
+                double path_cost = new_nodeS->cost_from_start + nearest_nodeT->cost_from_start + calDist(nearest_nodeT->x, new_nodeS->x);
+                if (path_cost < cost_best_)
+                {
+                  vector<Eigen::Vector3d> curr_best_path;
+                  if (path_reverse)
+                    fillPath(nearest_nodeT, new_nodeS, curr_best_path);
+                  else
+                    fillPath(new_nodeS, nearest_nodeT, curr_best_path);
+                  path_list_.emplace_back(curr_best_path);
+                  solution_cost_time_pair_list_.emplace_back(path_cost, (ros::Time::now() - rrt_start_time).toSec());
+                  cost_best_ = path_cost;
+                }
+                std::cout << "[BRRT_Optimized]**********find path after " << idx << " iterations" << std::endl;
+                break;
+              }
+            }
+          }
+        }
+        else
+        {
+          // Do not use guide pair, just sample a random point
+          struct kdres *p_nearestS = kd_nearest3(treeS, q_rand[0], q_rand[1], q_rand[2]);
+          if (p_nearestS == nullptr)
+          {
+            continue;
+          }
+          RRTNode3DPtr nearest_nodeS = (RRTNode3DPtr)kd_res_item_data(p_nearestS);
+          kd_res_free(p_nearestS);
+          // Steer towards the random point
+          // and check if the new point is valid
+          // [SPECIAL] use the guide node to steer
+          // [SPECIAL] use the last updated guide node to steer
+          // [SPECIAL] if not do not have the last updated guide node, use the nearest node to steer
+          if (s_guide == nullptr)
+          {
+            s_guide = nearest_nodeS;
+          }
           Eigen::Vector3d q_new = getFreeNodeInLine(nearest_nodeS->x, q_rand, brrt_optimize_step_, s_guide->x);
           if (map_ptr_->isStateValid(q_new) && map_ptr_->isSegmentValid(nearest_nodeS->x, q_new))
           {
@@ -331,64 +402,17 @@ namespace path_plan
             }
           }
         }
-        else
-        {
-          struct kdres *p_nearestS = kd_nearest3(treeS, q_rand[0], q_rand[1], q_rand[2]);
-          if (p_nearestS == nullptr)
-          {
-            continue;
-          }
-          RRTNode3DPtr nearest_nodeS = (RRTNode3DPtr)kd_res_item_data(p_nearestS);
-          kd_res_free(p_nearestS);
-          Eigen::Vector3d q_new = getFreeNodeInLine(nearest_nodeS->x, q_rand, brrt_optimize_step_, s_guide->x);
-          if (map_ptr_->isStateValid(q_new) && map_ptr_->isSegmentValid(nearest_nodeS->x, q_new))
-          {
-            double step_len = (q_new - nearest_nodeS->x).norm();
-            double dist_from_S = nearest_nodeS->cost_from_start + step_len;
-            RRTNode3DPtr new_nodeS = addTreeNode(nearest_nodeS, q_new, dist_from_S, step_len);
-            kd_insert3(treeS, q_new[0], q_new[1], q_new[2], new_nodeS);
-            struct kdres *p_nearestT = kd_nearest3(treeT, q_new[0], q_new[1], q_new[2]);
-            if (p_nearestT != nullptr)
-            {
-              RRTNode3DPtr nearest_nodeT = (RRTNode3DPtr)kd_res_item_data(p_nearestT);
-              kd_res_free(p_nearestT);
-              vector<Eigen::Vector3d> x_connects;
-              bool isConnected = greedySteer(nearest_nodeT->x, q_new, x_connects, steer_length_);
-              if (!x_connects.empty())
-              {
-                RRTNode3DPtr new_nodeT = nearest_nodeT;
-                for (auto &x_connect : x_connects) {
-                  double step_len_T = (x_connect - new_nodeT->x).norm();
-                  double cost_T = new_nodeT->cost_from_start + step_len_T;
-                  new_nodeT = addTreeNode(new_nodeT, x_connect, cost_T, step_len_T);
-                  kd_insert3(treeT, x_connect[0], x_connect[1], x_connect[2], new_nodeT);
-                }
-              }
-              if (isConnected)
-              {
-                tree_connected = true;
-                double path_cost = new_nodeS->cost_from_start + nearest_nodeT->cost_from_start + calDist(nearest_nodeT->x, new_nodeS->x);
-                if (path_cost < cost_best_)
-                {
-                  vector<Eigen::Vector3d> curr_best_path;
-                  if (path_reverse)
-                    fillPath(nearest_nodeT, new_nodeS, curr_best_path);
-                  else
-                    fillPath(new_nodeS, nearest_nodeT, curr_best_path);
-                  path_list_.emplace_back(curr_best_path);
-                  solution_cost_time_pair_list_.emplace_back(path_cost, (ros::Time::now() - rrt_start_time).toSec());
-                  cost_best_ = path_cost;
-                }
-                std::cout << "[BRRT_Optimized]**********find path after " << idx << " iterations" << std::endl;
-                break;
-              }
-            }
-          }
-        }
+        currentTree = treeS;
+        // ROS_INFO_STREAM("current tree S: " << treeS << " nodes");
+        if (currentTree == kdtree_1) node1+=1;
+        else node2+=1;
         std::swap(treeS, treeT);
+        // ROS_INFO_STREAM("current tree S: " << treeS << " nodes");
         path_reverse = !path_reverse;
         visualizeWholeTree();
       }
+      ROS_INFO_STREAM("Total seps in tree1: " << node1);
+      ROS_INFO_STREAM("Total seps in tree2: " << node2);
       if (tree_connected)
       {
         final_path_use_time_ = (ros::Time::now() - rrt_start_time).toSec();
