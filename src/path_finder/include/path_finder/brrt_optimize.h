@@ -66,6 +66,7 @@ namespace path_plan
       valid_tree_node_nums_ = 2;
       vis_ptr_->visualize_a_ball(s, 0.3, "start", visualization::Color::pink);
       vis_ptr_->visualize_a_ball(g, 0.3, "goal", visualization::Color::steelblue);
+      // [VISUALIZATION] visualize two nodes
       ROS_INFO("[BRRT_Optimize]: BRRT starts planning a path");
       return brrt_optimize(s, g);
     }
@@ -293,6 +294,7 @@ namespace path_plan
           RRTNode3DPtr nearest_nodeS = (RRTNode3DPtr)kd_res_item_data(p_nearestS);
           kd_res_free(p_nearestS);
           Eigen::Vector3d q_new = getFreeNodeInLine(nearest_nodeS->x, q_rand, brrt_optimize_step_, s_guide->x);
+          ROS_INFO_STREAM("[BRRT_Optimize]: new node: " << q_new);
           if (map_ptr_->isStateValid(q_new) && map_ptr_->isSegmentValid(nearest_nodeS->x, q_new))
           {
             double step_len = (q_new - nearest_nodeS->x).norm() / resolution_m_per_px_;
@@ -410,6 +412,7 @@ namespace path_plan
         // ROS_INFO_STREAM("current tree S: " << treeS << " nodes");
         path_reverse = !path_reverse;
         visualizeWholeTree();
+        // [VISUALIZATION] visualize the two trees after connected
       }
       ROS_INFO_STREAM("Total seps in tree1: " << node1);
       ROS_INFO_STREAM("Total seps in tree2: " << node2);
@@ -451,7 +454,9 @@ namespace path_plan
         tree_nodes.push_back(node_p);
       }
       vis_ptr_->visualize_balls(tree_nodes, "tree_vertice", visualization::Color::blue, 1.0);
+      // []VISUALIZATION] visualize tree nodes
       vis_ptr_->visualize_pairline(edges, "tree_edges", visualization::Color::red, 0.06);
+      // [VISUALIZATION] visualize tree edges
     }
     void sampleWholeTree(const RRTNode3DPtr &root, vector<Eigen::Vector3d> &vertice, vector<std::pair<Eigen::Vector3d, Eigen::Vector3d>> &edges)
     {
