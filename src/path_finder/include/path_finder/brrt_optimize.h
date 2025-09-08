@@ -294,7 +294,7 @@ namespace path_plan
           RRTNode3DPtr nearest_nodeS = (RRTNode3DPtr)kd_res_item_data(p_nearestS);
           kd_res_free(p_nearestS);
           Eigen::Vector3d q_new = getFreeNodeInLine(nearest_nodeS->x, q_rand, brrt_optimize_step_, s_guide->x);
-          ROS_INFO_STREAM("[BRRT_Optimize]: new node: " << q_new);
+          // ROS_INFO_STREAM("[BRRT_Optimize]: new node: " << q_new);
           if (map_ptr_->isStateValid(q_new) && map_ptr_->isSegmentValid(nearest_nodeS->x, q_new))
           {
             double step_len = (q_new - nearest_nodeS->x).norm() / resolution_m_per_px_;
