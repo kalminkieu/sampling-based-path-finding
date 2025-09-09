@@ -1,228 +1,194 @@
-size of map-25 25 -25 25 7.5
-cloudMap.points.size() = 16881
-[INFO] [1757298885.763717140]: no map rcved yet.
+[INFO] [1757434008.144615295]: no map rcved yet.
 glb occ set
-[INFO] [1757298934.192516831]: 
+[INFO] [1757434014.958774871]: 
 -----------------------------
-goal rcved at     23.1326    -22.7655 1.32221e-06
-[INFO] [1757298934.192653397]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 697 iterations
-[INFO] [1757298934.196160121]: [BRRT_Optimize]: find_path_use_time: 0.00341437, length: 48.7585
-[INFO] [1757298934.196321442]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298934.196437880]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298934.196457133]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298934.196473011]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298934.196488472]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 421 iterations
-[INFO] [1757298934.238212753]: Total seps in tree1: 211
-[INFO] [1757298934.238251927]: Total seps in tree2: 210
-[INFO] [1757298934.238274431]: [BRRT_Optimize]: Completed after 0.0418966 seconds
-[INFO] [1757298934.238283475]: [BRRT_Optimize]: find_path_use_time: 0.0418966, length: 37.5332
-[INFO] [1757298939.442148639]: 
+goal rcved at     15.7673    -19.9392 7.61509e-07
+[INFO] [1757434014.958885156]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 408 iterations
+[INFO] [1757434014.961783437]: [BRRT]: find_path_use_time: 0.0028377, length: 43.2939
+[INFO] [1757434014.961941594]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434014.962043421]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434014.962078294]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434014.962125291]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434014.962150497]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 179 iterations
+[INFO] [1757434014.975874407]: Total seps in tree1: 90
+[INFO] [1757434014.975938361]: Total seps in tree2: 89
+[INFO] [1757434014.975974526]: [BRRT_Optimize]: Completed after 0.0139815 seconds
+[INFO] [1757434014.975998024]: [BRRT_Optimize]: find_path_use_time: 0.0139815, length: 30.512
+[INFO] [1757434016.806169481]: 
 -----------------------------
-goal rcved at     -23.4296      24.1926 -1.57093e-06
-[INFO] [1757298939.442410062]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 624 iterations
-[INFO] [1757298939.443384948]: [BRRT_Optimize]: find_path_use_time: 0.000910708, length: 89.0515
-[INFO] [1757298939.444939358]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298939.445888907]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298939.446030224]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298939.446055770]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298939.446071273]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 1532 iterations
-[INFO] [1757298941.984844769]: Total seps in tree1: 766
-[INFO] [1757298941.984869148]: Total seps in tree2: 766
-[INFO] [1757298941.984883817]: [BRRT_Optimize]: Completed after 2.53987 seconds
-[INFO] [1757298941.984894028]: [BRRT_Optimize]: find_path_use_time: 2.53987, length: 82.6974
-[INFO] [1757298947.075273239]: 
+goal rcved at     -23.4203      23.9275 -1.89117e-07
+[INFO] [1757434016.806282224]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 1157 iterations
+[INFO] [1757434016.807818713]: [BRRT]: find_path_use_time: 0.00148962, length: 95.3461
+[INFO] [1757434016.807923207]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434016.807995952]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434016.808040366]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434016.808054574]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434016.808068531]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 395 iterations
+[INFO] [1757434017.092146698]: Total seps in tree1: 198
+[INFO] [1757434017.092167739]: Total seps in tree2: 197
+[INFO] [1757434017.092181238]: [BRRT_Optimize]: Completed after 0.284233 seconds
+[INFO] [1757434017.092195029]: [BRRT_Optimize]: find_path_use_time: 0.284233, length: 71.7942
+[INFO] [1757434018.555046291]: 
 -----------------------------
-goal rcved at      22.1459      23.2061 -8.64622e-07
-[INFO] [1757298947.075356005]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 882 iterations
-[INFO] [1757298947.076378234]: [BRRT_Optimize]: find_path_use_time: 0.000987806, length: 70.9785
-[INFO] [1757298947.076649617]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298947.076716421]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298947.076748719]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298947.076766972]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298947.076791727]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 202 iterations
-[INFO] [1757298947.142060378]: Total seps in tree1: 101
-[INFO] [1757298947.142080215]: Total seps in tree2: 101
-[INFO] [1757298947.142093050]: [BRRT_Optimize]: Completed after 0.0654009 seconds
-[INFO] [1757298947.142105636]: [BRRT_Optimize]: find_path_use_time: 0.0654009, length: 57.3077
-[INFO] [1757298949.242965339]: 
+goal rcved at     16.9868     21.4173 9.99289e-08
+[INFO] [1757434018.555253987]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 173 iterations
+[INFO] [1757434018.555529595]: [BRRT]: find_path_use_time: 0.000184488, length: 41.7695
+[INFO] [1757434018.555724499]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434018.555809161]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434018.555832326]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434018.555853783]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434018.555887073]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 232 iterations
+[INFO] [1757434018.654966220]: Total seps in tree1: 116
+[INFO] [1757434018.654988427]: Total seps in tree2: 116
+[INFO] [1757434018.655001884]: [BRRT_Optimize]: Completed after 0.0992171 seconds
+[INFO] [1757434018.655014134]: [BRRT_Optimize]: find_path_use_time: 0.0992171, length: 56.6584
+[INFO] [1757434020.471800613]: 
 -----------------------------
-goal rcved at     -23.1372     -23.6075 -9.55636e-07
-[INFO] [1757298949.243200632]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 858 iterations
-[INFO] [1757298949.245095689]: [BRRT_Optimize]: find_path_use_time: 0.00169556, length: 104.011
-[INFO] [1757298949.245286015]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298949.245347485]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298949.245395410]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298949.245422374]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298949.245474508]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 653 iterations
-[INFO] [1757298949.645577496]: Total seps in tree1: 327
-[INFO] [1757298949.645607960]: Total seps in tree2: 326
-[INFO] [1757298949.645626130]: [BRRT_Optimize]: Completed after 0.400307 seconds
-[INFO] [1757298949.645640216]: [BRRT_Optimize]: find_path_use_time: 0.400307, length: 79.473
-[INFO] [1757298953.627083172]: 
+goal rcved at    -15.4868    -17.0477 1.87163e-07
+[INFO] [1757434020.472081138]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 834 iterations
+[INFO] [1757434020.474154176]: [BRRT]: find_path_use_time: 0.00198029, length: 76.0863
+[INFO] [1757434020.474534569]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434020.474847550]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434020.474881048]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434020.474907755]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434020.474931920]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 650 iterations
+[INFO] [1757434021.364550702]: Total seps in tree1: 325
+[INFO] [1757434021.364576617]: Total seps in tree2: 325
+[INFO] [1757434021.364590657]: [BRRT_Optimize]: Completed after 0.889784 seconds
+[INFO] [1757434021.364601865]: [BRRT_Optimize]: find_path_use_time: 0.889784, length: 62.7058
+[INFO] [1757434023.956587947]: 
 -----------------------------
-goal rcved at     -10.8639      16.5358 -2.25341e-06
-[INFO] [1757298953.627181274]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 346 iterations
-[INFO] [1757298953.627582389]: [BRRT_Optimize]: find_path_use_time: 0.000360316, length: 64.1671
-[INFO] [1757298953.627655653]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298953.627702661]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298953.627713622]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298953.627723290]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298953.627733625]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 482 iterations
-[INFO] [1757298953.887118918]: Total seps in tree1: 241
-[INFO] [1757298953.887142839]: Total seps in tree2: 241
-[INFO] [1757298953.887155925]: [BRRT_Optimize]: Completed after 0.259476 seconds
-[INFO] [1757298953.887167427]: [BRRT_Optimize]: find_path_use_time: 0.259476, length: 54.9243
-[INFO] [1757298955.999722941]: 
+goal rcved at      -21.182       13.916 -1.87708e-06
+[INFO] [1757434023.956764770]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 260 iterations
+[INFO] [1757434023.957192368]: [BRRT]: find_path_use_time: 0.000362435, length: 36.9385
+[INFO] [1757434023.957289779]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434023.957339817]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434023.957365149]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434023.957378190]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434023.957431895]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 165 iterations
+[INFO] [1757434024.026592106]: Total seps in tree1: 83
+[INFO] [1757434024.026615355]: Total seps in tree2: 82
+[INFO] [1757434024.026626687]: [BRRT_Optimize]: Completed after 0.0693159 seconds
+[INFO] [1757434024.026641270]: [BRRT_Optimize]: find_path_use_time: 0.0693159, length: 43.833
+[INFO] [1757434026.071683802]: 
 -----------------------------
-goal rcved at     15.6342    -14.5171 4.34945e-07
-[INFO] [1757298955.999829044]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 722 iterations
-[INFO] [1757298956.000950167]: [BRRT_Optimize]: find_path_use_time: 0.00108628, length: 70.9853
-[INFO] [1757298956.001115947]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298956.001421920]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298956.001482598]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298956.001514312]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298956.001534649]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 615 iterations
-[INFO] [1757298956.508513889]: Total seps in tree1: 308
-[INFO] [1757298956.508534102]: Total seps in tree2: 307
-[INFO] [1757298956.508546729]: [BRRT_Optimize]: Completed after 0.507158 seconds
-[INFO] [1757298956.508554980]: [BRRT_Optimize]: find_path_use_time: 0.507158, length: 51.8371
-[INFO] [1757298958.594902459]: 
------------------------------
-goal rcved at      16.9567      20.7787 -1.27169e-06
-[INFO] [1757298958.595069990]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 507 iterations
-[INFO] [1757298958.595782371]: [BRRT_Optimize]: find_path_use_time: 0.000668123, length: 51.8981
-[INFO] [1757298958.595909937]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298958.595982075]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298958.596001203]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298958.596017957]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298958.596033834]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 109 iterations
-[INFO] [1757298958.625579577]: Total seps in tree1: 55
-[INFO] [1757298958.625609124]: Total seps in tree2: 54
-[INFO] [1757298958.625624293]: [BRRT_Optimize]: Completed after 0.029688 seconds
-[INFO] [1757298958.625676428]: [BRRT_Optimize]: find_path_use_time: 0.029688, length: 42.8385
-[INFO] [1757298962.282289632]: 
------------------------------
-goal rcved at     -20.6966      -19.546 -1.61639e-06
-[INFO] [1757298962.282437117]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 537 iterations
-[INFO] [1757298962.284313381]: [BRRT_Optimize]: find_path_use_time: 0.00180046, length: 79.6702
-[INFO] [1757298962.284443071]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298962.284504208]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298962.284557968]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298962.284685074]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298962.284850772]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+goal rcved at     16.0716     -9.1948 1.59733e-06
+[INFO] [1757434026.071821877]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 883 iterations
+[INFO] [1757434026.073916080]: [BRRT]: find_path_use_time: 0.00202033, length: 75.994
+[INFO] [1757434026.074078487]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434026.074234352]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434026.074306181]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434026.074334804]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434026.074362053]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
 [BRRT_Optimized]**********find path after 342 iterations
-[INFO] [1757298962.450539136]: Total seps in tree1: 171
-[INFO] [1757298962.450564640]: Total seps in tree2: 171
-[INFO] [1757298962.450576309]: [BRRT_Optimize]: Completed after 0.166103 seconds
-[INFO] [1757298962.450590145]: [BRRT_Optimize]: find_path_use_time: 0.166103, length: 67.5963
-[INFO] [1757298964.846502112]: 
+[INFO] [1757434026.271646279]: Total seps in tree1: 171
+[INFO] [1757434026.271668028]: Total seps in tree2: 171
+[INFO] [1757434026.271681944]: [BRRT_Optimize]: Completed after 0.197541 seconds
+[INFO] [1757434026.271690735]: [BRRT_Optimize]: find_path_use_time: 0.197541, length: 51.9978
+[INFO] [1757434028.320918840]: 
 -----------------------------
-goal rcved at      20.7207     -5.82796 -7.84288e-07
-[INFO] [1757298964.846611257]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 470 iterations
-[INFO] [1757298964.847583104]: [BRRT_Optimize]: find_path_use_time: 0.000922504, length: 78.8482
-[INFO] [1757298964.847668911]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298964.847726005]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298964.847747926]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298964.847768263]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298964.847787225]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 134 iterations
-[INFO] [1757298964.899405687]: Total seps in tree1: 67
-[INFO] [1757298964.899429441]: Total seps in tree2: 67
-[INFO] [1757298964.899441860]: [BRRT_Optimize]: Completed after 0.0517408 seconds
-[INFO] [1757298964.899462697]: [BRRT_Optimize]: find_path_use_time: 0.0517408, length: 53.601
-[INFO] [1757298967.146911564]: 
+goal rcved at     -11.3452      23.4768 -7.75757e-07
+[INFO] [1757434028.321104662]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 369 iterations
+[INFO] [1757434028.321713083]: [BRRT]: find_path_use_time: 0.000552007, length: 55.9503
+[INFO] [1757434028.321789036]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434028.321905654]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434028.322024480]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434028.322048270]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434028.322073602]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 306 iterations
+[INFO] [1757434028.523465003]: Total seps in tree1: 153
+[INFO] [1757434028.523489918]: Total seps in tree2: 153
+[INFO] [1757434028.523501084]: [BRRT_Optimize]: Completed after 0.201632 seconds
+[INFO] [1757434028.523509375]: [BRRT_Optimize]: find_path_use_time: 0.201632, length: 58.0946
+[INFO] [1757434030.303746800]: 
 -----------------------------
-goal rcved at      22.4375      22.7778 -6.98407e-07
-[INFO] [1757298967.147021167]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 976 iterations
-[INFO] [1757298967.148686059]: [BRRT_Optimize]: find_path_use_time: 0.00161913, length: 59.6873
-[INFO] [1757298967.148809915]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298967.148871468]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298967.148893639]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298967.148912643]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298967.148936939]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 1665 iterations
-[INFO] [1757298971.168827162]: Total seps in tree1: 833
-[INFO] [1757298971.168848624]: Total seps in tree2: 832
-[INFO] [1757298971.168861752]: [BRRT_Optimize]: Completed after 4.02002 seconds
-[INFO] [1757298971.168871920]: [BRRT_Optimize]: find_path_use_time: 4.02002, length: 43.9792
-[INFO] [1757298984.150200620]: 
+goal rcved at     9.90168    -17.9313 6.58633e-08
+[INFO] [1757434030.303862543]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 618 iterations
+[INFO] [1757434030.304874647]: [BRRT]: find_path_use_time: 0.000937108, length: 51.7393
+[INFO] [1757434030.304989598]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434030.305079425]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434030.305109799]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434030.305138713]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434030.305159795]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 343 iterations
+[INFO] [1757434030.501824672]: Total seps in tree1: 172
+[INFO] [1757434030.501847546]: Total seps in tree2: 171
+[INFO] [1757434030.501859795]: [BRRT_Optimize]: Completed after 0.196837 seconds
+[INFO] [1757434030.501872836]: [BRRT_Optimize]: find_path_use_time: 0.196837, length: 55.7426
+[INFO] [1757434031.803278496]: 
 -----------------------------
-goal rcved at    -23.7156    -23.4528 1.80913e-06
-[INFO] [1757298984.150469837]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 1079 iterations
-[INFO] [1757298984.152060758]: [BRRT_Optimize]: find_path_use_time: 0.00154087, length: 98.3757
-[INFO] [1757298984.152174988]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298984.152230956]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298984.152251460]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298984.152266838]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298984.152283300]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 623 iterations
-[INFO] [1757298984.686893862]: Total seps in tree1: 312
-[INFO] [1757298984.686939704]: Total seps in tree2: 311
-[INFO] [1757298984.686990505]: [BRRT_Optimize]: Completed after 0.534757 seconds
-[INFO] [1757298984.687008509]: [BRRT_Optimize]: find_path_use_time: 0.534757, length: 78.2837
-[INFO] [1757298989.899720496]: 
+goal rcved at     15.6268    -20.1138 1.33121e-06
+[INFO] [1757434031.803356033]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 70 iterations
+[INFO] [1757434031.803452360]: [BRRT]: find_path_use_time: 7.8286e-05, length: 12.1049
+[INFO] [1757434031.803526772]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434031.803582977]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434031.803615683]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434031.803634474]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434031.803650598]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 0 iterations
+[INFO] [1757434031.803680929]: Total seps in tree1: 0
+[INFO] [1757434031.803699095]: Total seps in tree2: 0
+[INFO] [1757434031.803782881]: [BRRT_Optimize]: Completed after 0.000208736 seconds
+[INFO] [1757434031.804216729]: [BRRT_Optimize]: find_path_use_time: 0.000208736, length: 6.59446
+[INFO] [1757434033.921612912]: 
 -----------------------------
-goal rcved at     23.0343    -22.8327 1.40183e-06
-[INFO] [1757298989.899813763]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 1081 iterations
-[INFO] [1757298989.902640999]: [BRRT_Optimize]: find_path_use_time: 0.00277114, length: 84.1572
-[INFO] [1757298989.902772857]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298989.902842703]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298989.902864374]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298989.902883169]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298989.902901339]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 415 iterations
-[INFO] [1757298990.112091491]: Total seps in tree1: 208
-[INFO] [1757298990.112118205]: Total seps in tree2: 207
-[INFO] [1757298990.112134249]: [BRRT_Optimize]: Completed after 0.209326 seconds
-[INFO] [1757298990.112144918]: [BRRT_Optimize]: find_path_use_time: 0.209326, length: 60.3885
-[INFO] [1757298999.368908927]: 
+goal rcved at    -22.8784     21.4887 -1.7283e-06
+[INFO] [1757434033.921807441]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 1400 iterations
+[INFO] [1757434033.925060904]: [BRRT]: find_path_use_time: 0.00318943, length: 80.1503
+[INFO] [1757434033.925127817]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434033.925228435]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434033.925265141]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434033.925290265]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434033.925312347]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 288 iterations
+[INFO] [1757434034.076164468]: Total seps in tree1: 144
+[INFO] [1757434034.076187300]: Total seps in tree2: 144
+[INFO] [1757434034.076198550]: [BRRT_Optimize]: Completed after 0.151041 seconds
+[INFO] [1757434034.076207507]: [BRRT_Optimize]: find_path_use_time: 0.151041, length: 62.8959
+[INFO] [1757434036.203777903]: 
 -----------------------------
-goal rcved at     -23.1509      23.8615 -2.08475e-06
-[INFO] [1757298999.369113798]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 944 iterations
-[INFO] [1757298999.371503495]: [BRRT_Optimize]: find_path_use_time: 0.00232798, length: 110.573
-[INFO] [1757298999.371742123]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757298999.371793049]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757298999.371814345]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757298999.371831265]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757298999.371847851]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 583 iterations
-[INFO] [1757298999.760536199]: Total seps in tree1: 292
-[INFO] [1757298999.760559703]: Total seps in tree2: 291
-[INFO] [1757298999.760578290]: [BRRT_Optimize]: Completed after 0.388802 seconds
-[INFO] [1757298999.760592959]: [BRRT_Optimize]: find_path_use_time: 0.388802, length: 74.9689
-[INFO] [1757299002.051698413]: 
+goal rcved at     18.7752     19.2879 6.78973e-07
+[INFO] [1757434036.203887688]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 10 iterations
+[INFO] [1757434036.203962266]: [BRRT]: find_path_use_time: 4.483e-05, length: 41.8231
+[INFO] [1757434036.204214751]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434036.204286204]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434036.204320661]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434036.204347034]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434036.204373866]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 302 iterations
+[INFO] [1757434036.322550559]: Total seps in tree1: 151
+[INFO] [1757434036.322698800]: Total seps in tree2: 151
+[INFO] [1757434036.322740798]: [BRRT_Optimize]: Completed after 0.118479 seconds
+[INFO] [1757434036.322750089]: [BRRT_Optimize]: find_path_use_time: 0.118479, length: 56.3889
+[INFO] [1757434038.022659884]: 
 -----------------------------
-goal rcved at      22.7266      22.7936 -1.47321e-06
-[INFO] [1757299002.051967839]: [BRRT]: BRRT starts planning a path
-[BRRT]**********find path after 267 iterations
-[INFO] [1757299002.052290649]: [BRRT_Optimize]: find_path_use_time: 0.000264633, length: 64.0722
-[INFO] [1757299002.052368539]: [BRRT_Optimize]: BRRT starts planning a path
-[INFO] [1757299002.052567826]: [BRRT_Optimize]: Start optimizing path with p: 0.5
-[INFO] [1757299002.052592622]: [BRRT_Optimize]: Max iteration: 3000
-[INFO] [1757299002.052737691]: [BRRT_Optimize]: Steer length: 60
-[INFO] [1757299002.052763779]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
-[BRRT_Optimized]**********find path after 2139 iterations
-[INFO] [1757299009.352191916]: Total seps in tree1: 1070
-[INFO] [1757299009.352216504]: Total seps in tree2: 1069
-[INFO] [1757299009.352228881]: [BRRT_Optimize]: Completed after 7.29969 seconds
-[INFO] [1757299009.352244842]: [BRRT_Optimize]: find_path_use_time: 7.29969, length: 74.1286
+goal rcved at    -22.3712    -22.9331 1.64147e-06
+[INFO] [1757434038.022762169]: [BRRT]: BRRT starts planning a path
+[BRRT]**********find path after 436 iterations
+[INFO] [1757434038.023655321]: [BRRT]: find_path_use_time: 0.000841905, length: 76.739
+[INFO] [1757434038.023752440]: [BRRT_Optimize]: BRRT starts planning a path
+[INFO] [1757434038.023900306]: [BRRT_Optimize]: Start optimizing path with p: 0.5
+[INFO] [1757434038.023933345]: [BRRT_Optimize]: Max iteration: 3000
+[INFO] [1757434038.023957260]: [BRRT_Optimize]: Steer length: 60
+[INFO] [1757434038.023971634]: [BRRT_Optimize]: alpha: 0.5, beta: 0.2, gamma: 0.3
+[BRRT_Optimized]**********find path after 375 iterations
+[INFO] [1757434038.272643093]: Total seps in tree1: 188
+[INFO] [1757434038.272668424]: Total seps in tree2: 187
+[INFO] [1757434038.272682632]: [BRRT_Optimize]: Completed after 0.248816 seconds
+[INFO] [1757434038.272691714]: [BRRT_Optimize]: find_path_use_time: 0.248816, length: 73.5449

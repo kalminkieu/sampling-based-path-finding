@@ -63,7 +63,7 @@ void RandomBRRTGenerate()
    random_device rd;
    default_random_engine eng(rd());
    // map obstacle ratio
-   float ramdom_ratio = 0.18; // 0.06 for 50x50x5 map, 0.1 for 20x20x5 map
+   float ramdom_ratio = 0.05; // 0.06 for 50x50x5 map, 0.1 for 20x20x5 map
 
    pcl::PointXYZ pt_random;
    std::cout<<"size of map" << _x_l << " " << _x_h << " " << _y_l << " " << _y_h <<" " << _h_h <<std::endl;

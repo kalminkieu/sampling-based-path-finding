@@ -382,7 +382,7 @@ namespace path_plan
         final_path_ = path_list_.back();              // lấy path cuối
         double L = computePathLength(final_path_);    // tính độ dài
 
-        ROS_INFO_STREAM("[BRRT_Optimize]: find_path_use_time: "
+        ROS_INFO_STREAM("[BRRT]: find_path_use_time: "
           << final_path_use_time_
           << ", length: " << L);
       }
